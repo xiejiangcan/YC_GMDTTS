@@ -14,7 +14,9 @@ public:
     enum ComboBoxT{C_BAUD, C_DEVLST, C_LENGTH};
 public:
     SUsbCanWidget(SMainWindow *mainWindow, QWidget *parent = 0);
+    ~SUsbCanWidget();
 
+    YCanHandle* currentHandle();
     void setSObject(SObject *obj) override;
     void propertyOfSObjectChanged(SObject *obj,
                                   const QString &strPropName,
@@ -26,13 +28,15 @@ public:
 
 protected:
     void initWidget();
-    void initHandles();
     void registerDevice();
 
     bool nativeEvent(const QByteArray &eventType, void* message, long* result) override;
 
+    SThread m_thread;
+    static int controlThread(void *pParam, const bool &bRunning);
+
 public slots:
-    void slotCanMessage(const CAN_OBJ& buf);
+    void slotCanMessage(const CAN_MESSAGE_PACKAGE& buf);
     void slotBtnClicked();
 
 private:
@@ -40,11 +44,10 @@ private:
     QRadioButton*   m_radioBtns[B_LENGTH];
     QComboBox*      m_comboBox[C_LENGTH];
     QPushButton*    m_switchBtn = nullptr;
-    QVector<YCanHandle*>    m_handles;
-    QStringList             m_deviceList;
+    YCanHandle*     m_handle;
+    QStringList     m_deviceList;
 
     bool                    m_isOpen = false;
-    QVector<uint>           m_dataVersion;
 };
 
 #endif // SUSBCANWIDGET_H

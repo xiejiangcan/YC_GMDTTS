@@ -52,7 +52,6 @@
 #include <QFileDialog>
 #include <QComboBox>
 
-
 #if defined(CORE_LIBRARY)
 #  define CORE_EXPORT Q_DECL_EXPORT
 #else
@@ -181,6 +180,10 @@ Q_DECLARE_INTERFACE(SPluginInterface, "yc.mgdtts.interface/1.0")
 #define STR_TYPE        "type"
 #define STR_VALUE       "value"
 #define STR_DATASOURCE  "DataSource"
+#define STR_DATAOUT     "DataOut"
+#define STR_PARAMOUT    "ParamOut"
+#define STR_SIGNALOUT   "signalOut"
+#define STR_RESULTOUT   "resultOut"
 #define STR_CHECKABLE   "checkable"
 #define STR_CHANGEDBY   "changed_by"
 #define STR_ROLE        "role"

@@ -337,6 +337,7 @@ void SMainWindow::slotOpenProject(const SObject *projObj)
 
 void SMainWindow::slotCloseProject(bool bReleaseOld)
 {
+    //slotSave();
     if(m_project != NULL
             && bReleaseOld)
         delete m_project;

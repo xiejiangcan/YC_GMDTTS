@@ -1,6 +1,7 @@
 ﻿#include "ycanhandle.h"
 #include <QMessageBox>
 #include <QMutexLocker>
+#include <QMetaType>
 
 #define TestCan
 
@@ -23,14 +24,17 @@ YCanHandle::YCanHandle(QObject *parent)
     mIsOpen = false;
     // 初始化监听线程
     mThread.setUserParam(this);
-    mThread.setUserFunction(listenCan);
 
-    qRegisterMetaType<CAN_OBJ>("CAN_OBJ");
+    qRegisterMetaType<CAN_MESSAGE_PACKAGE>("CAN_MESSAGE_PACKAGE");
 }
 
 YCanHandle::~YCanHandle()
 {
-    Close();
+    if(mThread.isRunning()){
+        mThread.stop();
+        mThread.wait();
+        mThread.quit();
+    }
 }
 
 void YCanHandle::setDeviceType(int deviceType)
@@ -117,6 +121,12 @@ void YCanHandle::setBaudType(BaudType baudType)
     }
 }
 
+void YCanHandle::setDeviceSize(int deviceSize)
+{
+    QMutexLocker locker(&mMutex);
+    nDeviceSize = deviceSize;
+}
+
 int YCanHandle::DeviceType() const
 {
     return nDeviceType;
@@ -135,6 +145,83 @@ int YCanHandle::CanInd() const
 BOARD_INFO YCanHandle::BoardInfo() const
 {
     return mBoardInfo;
+}
+
+bool YCanHandle::OpenAll()
+{
+    int failed = 0;
+    for(int i = 0; i < nDeviceSize; ++i){
+        if(!OpenDev(i)){
+            ++failed;
+        }
+    }
+
+    mThread.setUserFunction(listenAllCan);
+    mThread.start();
+    mIsOpen = true;
+    return failed == 0;
+}
+
+bool YCanHandle::OpenDev(int devInd)
+{
+    // 连接设备
+    auto dwRel = OpenDevice(nDeviceType, devInd, nReserved);
+    if(dwRel == STATUS_ERR){
+        ReadErrInfo(nDeviceType, devInd, 0, &mErrInfo);
+        ReadErrInfo(nDeviceType, devInd, 1, &mErrInfo);
+        return false;
+    }
+
+    // 初始化CAN
+    dwRel = InitCAN(nDeviceType, devInd, 0, &mVic);
+    if(dwRel == STATUS_ERR){
+        ReadErrInfo(nDeviceType, devInd, 0, &mErrInfo);
+        CloseDevice(nDeviceType, nDeviceInd);
+        return false;
+    }
+    dwRel = InitCAN(nDeviceType, devInd, 1, &mVic);
+    if(dwRel == STATUS_ERR){
+        ReadErrInfo(nDeviceType, devInd, 1, &mErrInfo);
+        CloseDevice(nDeviceType, nDeviceInd);
+        return false;
+    }
+
+    // 启动设备
+    dwRel = StartCAN(nDeviceType, devInd, 0);
+    if(dwRel == STATUS_ERR){
+        ReadErrInfo(nDeviceType, devInd, 0, &mErrInfo);
+        CloseDevice(nDeviceType, nDeviceInd);
+        return false;
+    }
+
+    dwRel = StartCAN(nDeviceType, devInd, 1);
+    if(dwRel == STATUS_ERR){
+        ReadErrInfo(nDeviceType, devInd, 1, &mErrInfo);
+        CloseDevice(nDeviceType, nDeviceInd);
+        return false;
+    }
+
+    // 获取设备信息
+    dwRel = ReadBoardInfo(nDeviceType, devInd, &mBoardInfo);
+    if(dwRel == STATUS_ERR){
+        ReadErrInfo(nDeviceType, devInd, 0, &mErrInfo);
+        ReadErrInfo(nDeviceType, devInd, 1, &mErrInfo);
+        return false;
+    }
+
+    // 获取CAN状态
+    dwRel = ReadCANStatus(nDeviceType, devInd, 0, &mCanStatus);
+    if(dwRel == STATUS_ERR){
+        ReadErrInfo(nDeviceType, devInd, 0, &mErrInfo);
+        return false;
+    }
+    dwRel = ReadCANStatus(nDeviceType, devInd, 1, &mCanStatus);
+    if(dwRel == STATUS_ERR){
+        ReadErrInfo(nDeviceType, devInd, 1, &mErrInfo);
+        return false;
+    }
+
+    return true;
 }
 
 bool YCanHandle::Open()
@@ -159,6 +246,7 @@ bool YCanHandle::Open()
         CloseDevice(nDeviceType, nDeviceInd);
         return false;
     }
+
     // 获取设备信息
     dwRel = ReadBoardInfo(nDeviceType, nDeviceInd, &mBoardInfo);
     if(dwRel == STATUS_ERR){
@@ -172,6 +260,7 @@ bool YCanHandle::Open()
         return false;
     }
 
+    mThread.setUserFunction(listenCan);
     mThread.start();
     mIsOpen = true;
     return true;
@@ -191,6 +280,66 @@ bool YCanHandle::Close()
     }
     mIsOpen = false;
     return true;
+}
+
+bool YCanHandle::CloseAll()
+{
+    if(mThread.isRunning()){
+        mThread.stop();
+        mThread.wait();
+        mThread.quit();
+    }
+
+    int failed = 0;
+    for(int i = 0; i < nDeviceSize; ++i){
+        if(CloseDev(i) == STATUS_ERR){
+            ++failed;
+        }
+    }
+
+    return failed == 0;
+}
+
+bool YCanHandle::CloseDev(int devInd)
+{
+    return CloseChan(devInd, 0) && CloseChan(devInd, 1);
+}
+
+bool YCanHandle::CloseChan(int devInd, int devChan)
+{
+    auto dwRel = CloseDevice(nDeviceType, devInd);
+    if(dwRel == STATUS_ERR){
+        ReadErrInfo(nDeviceType, devInd, devChan, &mErrInfo);
+        return false;
+    }
+    return true;
+}
+
+bool YCanHandle::SendDataToAll(CAN_OBJ data)
+{
+    int failed = 0;
+    for(int i = 0; i < nDeviceSize; ++i){
+        if(!SendDataToDev(data, i)){
+            ++failed;
+        }
+    }
+    return failed == 0;
+}
+
+bool YCanHandle::SendDataToDev(CAN_OBJ data, int devInd)
+{
+    return SendDataToChan(data, devInd, 0)
+            && SendDataToChan(data, devInd, 1);
+}
+
+bool YCanHandle::SendDataToChan(CAN_OBJ data, int devInd,
+                                int devChan)
+{
+    auto dwRes = Transmit(nDeviceType, devInd, devChan,
+                          &data, 1);
+    if(dwRes == 1)
+        return true;
+    return false;
 }
 
 bool YCanHandle::IsOpen()
@@ -252,39 +401,39 @@ QString YCanHandle::GetLastError()
 {
     switch (mErrInfo.ErrCode) {
     case ERR_CAN_OVERFLOW:
-        return QString(tr("CAN控制器内部FIFO溢出"));
+        return QString(QStringLiteral("CAN控制器内部FIFO溢出"));
     case ERR_CAN_ERRALARM:
-        return QString(tr("CAN控制器错误报警"));
+        return QString(QStringLiteral("CAN控制器错误报警"));
     case ERR_CAN_PASSIVE:
-        return QString(tr("CAN控制器消极错误"));
+        return QString(QStringLiteral("CAN控制器消极错误"));
     case ERR_CAN_LOSE:
-        return QString(tr("CAN控制器仲裁丢失"));
+        return QString(QStringLiteral("CAN控制器仲裁丢失"));
     case ERR_CAN_BUSERR:
-        return QString(tr("CAN控制器总线错误"));
+        return QString(QStringLiteral("CAN控制器总线错误"));
     case ERR_CAN_REG_FULL:
-        return QString(tr("CAN接收寄存器满"));
+        return QString(QStringLiteral("CAN接收寄存器满"));
     case ERR_CAN_REG_OVER:
-        return QString(tr("CAN接收寄存器溢出"));
+        return QString(QStringLiteral("CAN接收寄存器溢出"));
     case ERR_CAN_ZHUDONG:
-        return QString(tr("CAN控制器主动错误"));
+        return QString(QStringLiteral("CAN控制器主动错误"));
     case ERR_DEVICEOPENED:
-        return QString(tr("设备已经打开"));
+        return QString(QStringLiteral("设备已经打开"));
     case ERR_DEVICEOPEN:
-        return QString(tr("打开设备错误"));
+        return QString(QStringLiteral("打开设备错误"));
     case ERR_DEVICENOTOPEN:
-        return QString(tr("设备没有打开"));
+        return QString(QStringLiteral("设备没有打开"));
     case ERR_BUFFEROVERFLOW:
-        return QString(tr("缓冲区溢出"));
+        return QString(QStringLiteral("缓冲区溢出"));
     case ERR_DEVICENOTEXIST:
-        return QString(tr("此设备不存在"));
+        return QString(QStringLiteral("此设备不存在"));
     case ERR_LOADKERNELDLL:
-        return QString(tr("装载动态库失败"));
+        return QString(QStringLiteral("装载动态库失败"));
     case ERR_CMDFAILED:
-        return QString(tr("执行命令失败错误码"));
+        return QString(QStringLiteral("执行命令失败错误码"));
     case ERR_BUFFERCREATE:
-        return QString(tr("内存不足"));
+        return QString(QStringLiteral("内存不足"));
     default:
-        return QString(tr("未知错误"));
+        return QString(QStringLiteral("未知错误"));
     }
 }
 
@@ -320,7 +469,7 @@ int YCanHandle::listenCan(void *pParam, const bool &bRunning)
                 nBeg += readed;
                 nRes -= readed;
             }
-            handle->analysisBuf(dataPool);
+            handle->analysisBuf(handle->nDeviceInd, handle->nCANInd, dataPool);
         }
         QThread::msleep(1);
     }
@@ -328,13 +477,79 @@ int YCanHandle::listenCan(void *pParam, const bool &bRunning)
     return 0;
 }
 
+int YCanHandle::listenAllCan(void *pParam, const bool &bRunning)
+{
+    YCanHandle* handle = static_cast<YCanHandle*>(pParam);
+    if(!handle){
+        return -1;
+    }
 
+    while(bRunning){
+        for(int i = 0; i < handle->nDeviceSize; ++i){
+            for(int j = 0; j < 2; ++j){
+                // 获取CAN状态
+                auto dwRel = ReadCANStatus(handle->nDeviceType,
+                                           i,
+                                           j,
+                                           &handle->mCanStatus);
+                if(dwRel == STATUS_ERR){
+                    ReadErrInfo(handle->nDeviceType,
+                                i,
+                                j,
+                                &handle->mErrInfo);
+                    emit handle->signError();
+                }
+                QMutexLocker locker(&handle->mMutex);
+                DWORD nRes = GetReceiveNum(handle->nDeviceType, i, j);
+                if(nRes != 0){
+                    DWORD nBeg = 0;
+                    QVector<CAN_OBJ> dataPool(nRes);
+                    while(nRes){
+                        DWORD readed = Receive(handle->nDeviceType, i, j,
+                                               dataPool.data()+nBeg, nRes, 100);
+                        nBeg += readed;
+                        nRes -= readed;
+                    }
+                    handle->analysisBuf(i, j, dataPool);
+                }
+            }
+        }
 
-void YCanHandle::analysisBuf(const QVector<CAN_OBJ> &bufs)
+        QThread::msleep(1);
+    }
+
+    return 0;
+}
+
+Q_DECLARE_METATYPE(CAN_OBJ)
+void YCanHandle::analysisBuf(int devInd, int devChan, const QVector<CAN_OBJ> &bufs)
 {
     foreach(auto buf, bufs){
-        emit signCanMessage(buf);
+        CAN_MESSAGE_PACKAGE msg;
+        msg.devInd = devInd;
+        msg.devChan = devChan;
+        msg.canObj = QVariant::fromValue(buf);
+        emit signCanMessage(msg);
     }
 }
 
 
+QByteArray can2ByteArray(const CAN_OBJ &obj)
+{
+    const uint nSize = sizeof(CAN_OBJ);
+    QByteArray res(nSize, '0');
+    memcpy(res.data(), (const void*)(&obj), nSize);
+    return res;
+}
+
+CAN_OBJ byteArray2Can(const QByteArray &array)
+{
+    const uint nSize = sizeof(CAN_OBJ);
+    CAN_OBJ res;
+    if(array.size() != nSize){
+        qDebug() << "byteArray to CAN_OBJ error";
+        return res;
+    }
+    memcpy(&res, array.data(), nSize);
+    return res;
+}

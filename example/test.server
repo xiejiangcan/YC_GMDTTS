@@ -1,0 +1,41 @@
+ <server_tree name="">
+  <property>
+   <item name="Server Tree"/>
+   <item item=""/>
+  </property>
+  <children>
+   <item name="">
+    <property>
+     <item name="Server0"/>
+     <item value="10"/>
+     <item item=""/>
+    </property>
+    <children>
+     <item name="">
+      <property>
+       <item name="item1"/>
+       <item value="01"/>
+       <item item=""/>
+      </property>
+      <children/>
+     </item>
+     <item name="">
+      <property>
+       <item name="item2"/>
+       <item value="02"/>
+       <item item=""/>
+      </property>
+      <children/>
+     </item>
+     <item name="">
+      <property>
+       <item name="item3"/>
+       <item value="03"/>
+       <item item=""/>
+      </property>
+      <children/>
+     </item>
+    </children>
+   </item>
+  </children>
+ </server_tree>

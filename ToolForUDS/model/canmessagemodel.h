@@ -2,17 +2,25 @@
 #define CANMESSAGEMODEL_H
 
 #include "ToolForUDS_global.h"
-#include "ECanVci.h"
+#include "tool/ycanhandle.h"
+
 
 class CanMessageModel : public QAbstractTableModel
 {
     Q_OBJECT
+    struct ModelData{
+        QString devID;
+        CAN_OBJ obj;
+    };
 
 public:
     explicit CanMessageModel(QObject *parent = nullptr);
 
     // update function
-    void insertData(CAN_OBJ data);
+    void insertData(CAN_OBJ data, QString devID = "default dev");
+    void insertData(const CAN_MESSAGE_PACKAGE& msg);
+
+    void updateModel();
 
     // setting
     void setIsHex(bool enable);
@@ -28,11 +36,12 @@ public:
 
 protected:
     QVariant headerInfo(int section) const;
-    QVariant format(const CAN_OBJ& obj, int column) const;
+    QVariant format(const ModelData &obj, int column) const;
 
 private:
-    QVector<CAN_OBJ>    mModel;
-    bool                mIsHex;
+    QVector<ModelData>      mModel;
+    bool                    mIsHex = true;
+    int                     mFreshCount = 100;
 };
 
 #endif // CANMESSAGEMODEL_H

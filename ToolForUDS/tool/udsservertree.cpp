@@ -18,7 +18,6 @@ UdsServerTree::UdsServerTree(QWidget *parent)
     connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
             this, SLOT(currentItemChangedHandle(QTreeWidgetItem*,QTreeWidgetItem*)));
 
-
     QSettings settings;
     QString strFileName = settings.value("/config/lastServerFile").toString();
     QFileInfo info(strFileName);
@@ -69,6 +68,7 @@ bool UdsServerTree::openFile(const QString &strFileName)
     QTreeWidgetItem* root = (QTreeWidgetItem*)mManageTree->property("item").value<void*>();
     removeItem(root);
     fromXML(mManageTree, eRoot);
+    updateTree();
     return true;
 }
 
@@ -83,6 +83,14 @@ bool UdsServerTree::saveFile(const QString &strFileName)
     eRoot.save(outStream,1);
     file.close();
     return true;
+}
+
+QString UdsServerTree::lastFileName()
+{
+    QSettings settings;
+    QString strFileName = settings.value("/config/lastServerFile").toString();
+
+    return strFileName;
 }
 
 void UdsServerTree::contextMenuEvent(QContextMenuEvent *evt)

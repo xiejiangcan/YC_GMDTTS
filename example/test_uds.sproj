@@ -1,0 +1,248 @@
+ <object name="sobject">
+  <property>
+   <item name="author" type="QString" value=""/>
+   <item name="path" type="QString" value="E:/02_work_code/GMDTTS/example/test_uds.sproj"/>
+   <item name="comment" type="QString" value=""/>
+   <item name="type" type="QString" value="project_root"/>
+   <item name="__id" type="QString" value="sobject_0"/>
+  </property>
+  <children>
+   <item name="project_root">
+    <property>
+     <item name="name" type="QString" value="new_project"/>
+     <item name="comment" type="QString" value="project"/>
+     <item name="icon" type="QString" value=""/>
+     <item name="init_action" type="QString" value=""/>
+     <item name="release_action" type="QString" value=""/>
+     <item name="timer_interval" type="uint" value="1000"/>
+     <item name="timer_counter" type="uint" value="126"/>
+     <item name="__id" type="QString" value="sobject_1"/>
+    </property>
+    <children>
+     <item name="communication">
+      <property>
+       <item name="__id" type="QString" value="sobject_2"/>
+      </property>
+      <children/>
+     </item>
+     <item name="data">
+      <property>
+       <item name="__id" type="QString" value="sobject_3"/>
+      </property>
+      <children/>
+     </item>
+     <item name="resource">
+      <property>
+       <item name="__id" type="QString" value="sobject_4"/>
+      </property>
+      <children>
+       <item name="icon">
+        <property>
+         <item name="__id" type="QString" value="sobject_5"/>
+        </property>
+        <children/>
+       </item>
+       <item name="action">
+        <property>
+         <item name="__id" type="QString" value="sobject_6"/>
+        </property>
+        <children/>
+       </item>
+      </children>
+     </item>
+     <item name="ui">
+      <property>
+       <item name="_ui_show" type="QString" value="max"/>
+       <item name="toolbar_visible" type="bool" value="false"/>
+       <item name="statusbar_visible" type="bool" value="true"/>
+       <item name="__id" type="QString" value="sobject_7"/>
+       <item name="show_statusbar" type="bool" value="true"/>
+      </property>
+      <children>
+       <item name="menu">
+        <property>
+         <item name="__id" type="QString" value="sobject_8"/>
+        </property>
+        <children/>
+       </item>
+       <item name="central">
+        <property>
+         <item name="_ui_visible" type="bool" value="true"/>
+         <item name="_ui_layout" type="QString" value="layout_vbox"/>
+         <item name="__id" type="QString" value="sobject_9"/>
+        </property>
+        <children>
+         <item name="main_container">
+          <property>
+           <item name="_ui_visible" type="bool" value="true"/>
+           <item name="_ui_layout" type="QString" value="layout_grid"/>
+           <item name="_ui_layout_param" type="QString" value="0,0,0"/>
+           <item name="_ui_min_width" type="int" value="0"/>
+           <item name="_ui_min_height" type="int" value="0"/>
+           <item name="_ui_back_image" type="QString" value=""/>
+           <item name="__type" type="QString" value="container"/>
+           <item name="_ui_class" type="QString" value="tab"/>
+           <item name="_ui_closable" type="bool" value="true"/>
+           <item name="_ui_alignment" type="QString" value="align_north"/>
+           <item name="__id" type="QString" value="sobject_13"/>
+          </property>
+          <children>
+           <item name="message_container">
+            <property>
+             <item name="_ui_visible" type="bool" value="true"/>
+             <item name="_ui_layout" type="QString" value="layout_vbox"/>
+             <item name="_ui_layout_param" type="QString" value="0"/>
+             <item name="_ui_min_width" type="int" value="0"/>
+             <item name="_ui_min_height" type="int" value="0"/>
+             <item name="_ui_back_image" type="QString" value=""/>
+             <item name="_ui_title" type="QString" value="MessageTable"/>
+             <item name="_ui_icon" type="QString" value=""/>
+             <item name="__type" type="QString" value="container"/>
+             <item name="_ui_class" type="QString" value="scroll"/>
+             <item name="__id" type="QString" value="sobject_17"/>
+            </property>
+            <children>
+             <item name="can_message">
+              <property>
+               <item name="_ui_back_image" type="QString" value=""/>
+               <item name="_ui_show" type="bool" value="true"/>
+               <item name="auto_scroll" type="bool" value="true"/>
+               <item name="is_hex" type="bool" value="true"/>
+               <item name="DataSource" role="mapping" type="QString" value="msg_buff.receive_buff_"/>
+               <item name="__plugin" type="QString" value="can_message"/>
+               <item name="__type" type="QString" value="instance"/>
+               <item name="_ui_visible" type="bool" value="true"/>
+               <item name="_ui_layout" type="QString" value="layout_grid"/>
+               <item name="_ui_layout_param" type="QString" value="1,0,0"/>
+               <item name="_ui_min_width" type="int" value="0"/>
+               <item name="_ui_min_height" type="int" value="0"/>
+               <item name="__id" type="QString" value="sobject_18"/>
+              </property>
+              <children/>
+             </item>
+            </children>
+           </item>
+           <item name="UDSTable">
+            <property>
+             <item name="_ui_visible" type="bool" value="true"/>
+             <item name="_ui_layout" type="QString" value="layout_vbox"/>
+             <item name="_ui_layout_param" type="QString" value="0"/>
+             <item name="_ui_min_width" type="int" value="0"/>
+             <item name="_ui_min_height" type="int" value="0"/>
+             <item name="_ui_back_image" type="QString" value=""/>
+             <item name="_ui_title" type="QString" value="UDSTable"/>
+             <item name="_ui_icon" type="QString" value=""/>
+             <item name="__type" type="QString" value="container"/>
+             <item name="_ui_class" type="QString" value="scroll"/>
+             <item name="__id" type="QString" value="sobject_10"/>
+            </property>
+            <children>
+             <item name="uds_widget">
+              <property>
+               <item name="_ui_back_image" type="QString" value=""/>
+               <item name="_ui_show" type="bool" value="true"/>
+               <item name="server_file" type="QString" value=""/>
+               <item name="map_can_id" type="QString" value=""/>
+               <item name="last_can_id" type="QString" value=""/>
+               <item name="last_data" type="QString" value=""/>
+               <item name="DataSource" role="mapping" type="QString" value=""/>
+               <item name="DataOut" role="mapping" type="QString" value=""/>
+               <item name="__plugin" type="QString" value="uds_widget"/>
+               <item name="__type" type="QString" value="instance"/>
+               <item name="_ui_visible" type="bool" value="true"/>
+               <item name="_ui_layout" type="QString" value="layout_grid"/>
+               <item name="_ui_layout_param" type="QString" value="0,0,0"/>
+               <item name="_ui_min_width" type="int" value="0"/>
+               <item name="_ui_min_height" type="int" value="0"/>
+               <item name="__id" type="QString" value="sobject_11"/>
+              </property>
+              <children/>
+             </item>
+            </children>
+           </item>
+          </children>
+         </item>
+        </children>
+       </item>
+       <item name="dock">
+        <property>
+         <item name="__type" type="QString" value="dock"/>
+         <item name="__id" type="QString" value="sobject_12"/>
+        </property>
+        <children>
+         <item name="log_widget">
+          <property>
+           <item name="_ui_back_image" type="QString" value=""/>
+           <item name="_ui_show" type="bool" value="true"/>
+           <item name="log_save" type="bool" value="false"/>
+           <item name="save_file" type="QString" value=""/>
+           <item name="__plugin" type="QString" value="log_list"/>
+           <item name="__type" type="QString" value="instance"/>
+           <item name="_ui_visible" type="bool" value="true"/>
+           <item name="_ui_layout" type="QString" value="layout_grid"/>
+           <item name="_ui_layout_param" type="QString" value=""/>
+           <item name="_ui_min_width" type="int" value="0"/>
+           <item name="_ui_min_height" type="int" value="0"/>
+           <item name="_ui_area" type="QString" value="left"/>
+           <item name="_ui_index" type="int" value="1"/>
+           <item name="_ui_title" type="QString" value="Log"/>
+           <item name="_ui_floating" type="bool" value="false"/>
+           <item name="_ui_closable" type="bool" value="true"/>
+           <item name="_ui_allowed_areas" type="QString" value="all"/>
+           <item name="__id" type="QString" value="sobject_15"/>
+          </property>
+          <children/>
+         </item>
+         <item name="config_can">
+          <property>
+           <item name="_ui_back_image" type="QString" value=""/>
+           <item name="_ui_show" type="bool" value="true"/>
+           <item name="device_type" type="int" value="2"/>
+           <item name="can_channel" type="int" value="2"/>
+           <item name="can_baud" type="int" value="11"/>
+           <item name="__plugin" type="QString" value="usb_can"/>
+           <item name="__type" type="QString" value="instance"/>
+           <item name="_ui_visible" type="bool" value="true"/>
+           <item name="_ui_layout" type="QString" value="layout_grid"/>
+           <item name="_ui_layout_param" type="QString" value=""/>
+           <item name="_ui_min_width" type="int" value="0"/>
+           <item name="_ui_min_height" type="int" value="0"/>
+           <item name="_ui_area" type="QString" value="left"/>
+           <item name="_ui_index" type="int" value="0"/>
+           <item name="_ui_title" type="QString" value="CAN"/>
+           <item name="_ui_floating" type="bool" value="false"/>
+           <item name="_ui_closable" type="bool" value="true"/>
+           <item name="_ui_allowed_areas" type="QString" value="all"/>
+           <item name="__id" type="QString" value="sobject_14"/>
+          </property>
+          <children>
+           <item name="msg_buff">
+            <property>
+             <item name="buff_num" type="int" value="8"/>
+             <item name="__id" type="QString" value="msg_buff"/>
+            </property>
+            <children/>
+           </item>
+          </children>
+         </item>
+        </children>
+       </item>
+       <item name="pop_widget">
+        <property>
+         <item name="__id" type="QString" value="sobject_16"/>
+        </property>
+        <children/>
+       </item>
+       <item name="statusbar">
+        <property>
+         <item name="__type" type="QString" value="statusbar"/>
+         <item name="__id" type="QString" value="sobject_19"/>
+        </property>
+        <children/>
+       </item>
+      </children>
+     </item>
+    </children>
+   </item>
+  </children>
+ </object>

@@ -39,6 +39,8 @@ public:
     bool openFile(const QString& strFileName);
     bool saveFile(const QString& strFileName);
 
+    QString lastFileName();
+
     //static
     static void fromXML(QObject* obj, const QDomElement &eParent);
     static void toXML(QDomElement& eParent, QObject *obj);

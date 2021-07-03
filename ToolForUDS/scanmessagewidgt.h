@@ -3,6 +3,7 @@
 
 #include "ToolForUDS_global.h"
 #include "model/canmessagemodel.h"
+#include "model/canmessageproxymodel.h"
 
 class TOOLFORUDS_EXPORT SCanMessageWidgt : public SWidget
 {
@@ -25,9 +26,17 @@ public:
     static void initSObject(SObject* obj);
 
 protected:
-    void timerEvent(QTimerEvent* evt) override;
-    void analyzeData();
+    SThread m_thread;
+    static int controlThread(void *pParam, const bool &bRunning);
+
     void initWidget();
+
+signals:
+    void signUpdateTable();
+
+protected slots:
+    void slotFilterTable();
+    void slotIsHexStateChanged(int state);
 
 private:
     QTableView*             m_table = nullptr;
@@ -37,10 +46,10 @@ private:
     QGroupBox*              m_groupBox[G_LENGTH];
     QPushButton*            m_filterBtn = nullptr;
     QWidget*                m_topWidget = nullptr;
-    QSortFilterProxyModel*  m_proxyModel = nullptr;
+    CanMessageProxyModel*   m_proxyModel = nullptr;
 
-    int                 m_timerID = -1;
     QVector<uint>       m_versions;
+
 };
 
 #endif // SCANMESSAGEWIDGT_H

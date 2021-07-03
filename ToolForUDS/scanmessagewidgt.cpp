@@ -1,5 +1,6 @@
 ﻿#include "scanmessagewidgt.h"
 #include "tool/usbinterface.h"
+#include "tool/ycanhandle.h"
 
 SCanMessageWidgt::SCanMessageWidgt(SMainWindow *mainWindow, QWidget *parent)
     : SWidget(mainWindow, parent),
@@ -7,7 +8,7 @@ SCanMessageWidgt::SCanMessageWidgt(SMainWindow *mainWindow, QWidget *parent)
       m_model(new CanMessageModel(this)),
       m_filterBtn(new QPushButton(tr("Filter"), this)),
       m_topWidget(new QWidget(this)),
-      m_proxyModel(new QSortFilterProxyModel(this))
+      m_proxyModel(new CanMessageProxyModel(this))
 {
     m_checkBox[C_HEX] = new QCheckBox("isHex", this);
     m_checkBox[C_AUTO] = new QCheckBox("AutoScrollBottom", this);
@@ -19,12 +20,24 @@ SCanMessageWidgt::SCanMessageWidgt(SMainWindow *mainWindow, QWidget *parent)
     }
 
     initWidget();
+
+    connect(this, &SCanMessageWidgt::signUpdateTable, this, [&](){
+        m_table->scrollToBottom();
+    }, Qt::QueuedConnection);
+
+    connect(m_filterBtn, &QPushButton::clicked,
+            this, &SCanMessageWidgt::slotFilterTable);
+
+    connect(m_checkBox[C_HEX], &QCheckBox::stateChanged,
+            this, &SCanMessageWidgt::slotIsHexStateChanged);
 }
 
 SCanMessageWidgt::~SCanMessageWidgt()
 {
-    if(m_timerID != -1){
-        killTimer(m_timerID);
+    if(m_thread.isRunning()){
+        m_thread.stop();
+        m_thread.wait();
+        m_thread.quit();
     }
 }
 
@@ -60,11 +73,33 @@ void SCanMessageWidgt::initWidget()
     m_table->setModel(m_proxyModel);
 }
 
+void SCanMessageWidgt::slotFilterTable()
+{
+    QString time_l = m_lineEdit[L_TIMEL]->text();
+    QString time_h = m_lineEdit[L_TIMEH]->text();
+    QString canID_l = m_lineEdit[L_CANIDL]->text();
+    QString canID_h = m_lineEdit[L_CANIDH]->text();
+
+    m_proxyModel->setTimeRange(time_l, time_h);
+    m_proxyModel->setCanIDRange(canID_l, canID_h);
+
+    m_model->updateModel();
+}
+
+void SCanMessageWidgt::slotIsHexStateChanged(int state)
+{
+    m_model->setIsHex(state == Qt::Checked);
+    m_proxyModel->setIsHex(state == Qt::Checked);
+    m_model->updateModel();
+}
+
 void SCanMessageWidgt::setSObject(SObject *obj)
 {
     SWidget::setSObject(obj);
 
     m_checkBox[C_HEX]->setChecked(obj->property(IS_HEX).toBool());
+    m_model->setIsHex(obj->property(IS_HEX).toBool());
+    m_proxyModel->setIsHex(obj->property(IS_HEX).toBool());
     m_checkBox[C_AUTO]->setChecked(obj->property(IS_AUTO).toBool());
 }
 
@@ -77,8 +112,9 @@ void SCanMessageWidgt::propertyOfSObjectChanged(SObject *obj, const QString &str
         auto& mapMapping = mapping();
         if(mapMapping.contains(STR_DATASOURCE)
                 && mapMapping[STR_DATASOURCE][STR_TYPE].toString() == STR_PROP){
-            if(m_timerID == -1)
-                m_timerID = startTimer(50);
+            m_thread.setUserFunction(controlThread);
+            m_thread.setUserParam(this);
+            m_thread.start();
         }
     }
     QObject::blockSignals(false);
@@ -94,52 +130,51 @@ void SCanMessageWidgt::initSObject(SObject *obj)
     obj->setObjectName(CAN_MESSAGE);
     obj->setProperty(IS_AUTO, true);
     obj->setProperty(IS_HEX, true);
-    addSpecialProperty(obj, STR_DATASOURCE, STR_DEFAULT, STR_ROLE_MAPPING);
+    addSpecialProperty(obj, STR_DATASOURCE, "buff.receive_buff", STR_ROLE_MAPPING);
 }
 
-void SCanMessageWidgt::timerEvent(QTimerEvent *evt)
+Q_DECLARE_METATYPE(CAN_MESSAGE_PACKAGE)
+int SCanMessageWidgt::controlThread(void *pParam, const bool &bRunning)
 {
-    if(evt->timerId() == m_timerID){
-        analyzeData();
-    }
-}
-
-Q_DECLARE_METATYPE(CAN_OBJ)
-
-void SCanMessageWidgt::analyzeData()
-{
-    if(!isMapped(STR_DATASOURCE)){
-        return;
-    }
-    QStringList deviceList = canDeviceList();
-    SObject* signalObj = nullptr;
-    auto ParamInfo = mapping()["DataSource"];
-    signalObj =(SObject*)ParamInfo["value"].value<void*>();
-    if(signalObj == nullptr){
-        return;
-    }
-    while(m_versions.size() != deviceList.size()){
-        if(m_versions.size() > deviceList.size()){
-            m_versions.removeLast();
-        }else{
-            m_versions.append(1);
-        }
-    }
-    QByteArray signalProp = ParamInfo["property"].toString().toUtf8();
-    if(signalProp.isEmpty())
-        return;
-    for(int i = 0; i < deviceList.size(); ++i){
-        QString propName = QString(signalProp) + QString::number(i);
-        uint uVersion = signalObj->propertyInfo()[propName].m_version;
-        if(uVersion != m_versions[i]){
-            signalObj->lock().lockForRead();
-            CAN_OBJ canObj = signalObj->property(propName.toLatin1().data()).value<CAN_OBJ>();
-            m_versions[i] = uVersion;
-            signalObj->lock().unlock();
-            m_model->insertData(canObj);
-            if(m_checkBox[C_AUTO]->isChecked()){
-                m_table->scrollToBottom();
+    SCanMessageWidgt* pWidget = (SCanMessageWidgt*)pParam;
+    if(pWidget){
+        QVariantMap ParamInfo;
+        SObject* signalObj = nullptr;
+        uint dataSourceVer = 0;
+        QVariant data;
+        while(bRunning){
+            if(!pWidget->isMapped(STR_DATASOURCE)){
+                break;
             }
+            ParamInfo = pWidget->mapping()[STR_DATASOURCE];
+            signalObj =(SObject*)ParamInfo[STR_VALUE].value<void*>();
+            if(signalObj == nullptr){
+                break;
+            }
+            QByteArray signalProp = ParamInfo[STR_PROP].toString().toUtf8();
+            if(signalProp.isEmpty())
+                break;
+            QString propName = QString(signalProp);
+            uint uVersion = signalObj->propertyInfo()[propName].m_version;
+            if(uVersion != dataSourceVer){
+                if(signalObj->lock().tryLockForRead()){
+                    auto propLst = signalObj->dynamicPropertyNames();
+                    data = signalObj->property(propName.toLatin1().data());
+                    signalObj->lock().unlock();
+                }
+                if(data.isValid() && !data.isNull()){
+                    CAN_MESSAGE_PACKAGE canObj = data.value<CAN_MESSAGE_PACKAGE>();
+                    dataSourceVer = uVersion;
+                    pWidget->m_model->insertData(canObj);
+                }
+                if(pWidget->m_checkBox[C_AUTO]->isChecked()){
+                    emit pWidget->signUpdateTable();
+                }
+            }
+
+            QThread::msleep(1);
         }
     }
+    return 0;
 }
+

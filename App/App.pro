@@ -35,3 +35,9 @@ DEPENDPATH += $$PWD/../Core
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+#win32:CONFIG(release, debug|release): LIBS += -L'D:/Program Files (x86)/Visual Leak Detector/lib/Win64/' -lvl
+#else:win32:CONFIG(debug, debug|release): LIBS += -L'D:/Program Files (x86)/Visual Leak Detector/lib/Win64/' -lvld
+
+#INCLUDEPATH += 'D:/Program Files (x86)/Visual Leak Detector/include'
+#DEPENDPATH += 'D:/Program Files (x86)/Visual Leak Detector/include'

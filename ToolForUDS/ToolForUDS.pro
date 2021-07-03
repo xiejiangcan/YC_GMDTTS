@@ -18,28 +18,47 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     model/canmessagemodel.cpp \
+    model/canmessageproxymodel.cpp \
+    model/emcresultmodel.cpp \
+    model/udscanidmapmodel.cpp \
     scanmessagewidgt.cpp \
+    semctablewidget.cpp \
+    semcwidget.cpp \
     sexportplugin.cpp \
     slistwidgetforlog.cpp \
     sudswidget.cpp \
     susbcanwidget.cpp \
+    tool/COMM_APA_Rx_Decode.c \
     tool/abstracthandle.cpp \
+    tool/decodetools.cpp \
+    tool/udsserver.cpp \
     tool/udsservertree.cpp \
     tool/usbinterface.cpp \
-    tool/ycanhandle.cpp
+    tool/ycanhandle.cpp \
+    tool/yfileoperation.cpp
 
 HEADERS += \
     ToolForUDS_global.h \
     model/canmessagemodel.h \
+    model/canmessageproxymodel.h \
+    model/emcresultmodel.h \
+    model/udscanidmapmodel.h \
     scanmessagewidgt.h \
+    semctablewidget.h \
+    semcwidget.h \
     sexportplugin.h \
     slistwidgetforlog.h \
     sudswidget.h \
     susbcanwidget.h \
+    tool/COMM_APA_Rx_Decode.h \
     tool/abstracthandle.h \
+    tool/decodetools.h \
+    tool/rtwtypes.h \
+    tool/udsserver.h \
     tool/udsservertree.h \
     tool/usbinterface.h \
-    tool/ycanhandle.h
+    tool/ycanhandle.h \
+    tool/yfileoperation.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../Core/release/ -lSCore
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../Core/debug/ -lSCore
@@ -58,3 +77,6 @@ unix {
     target.path = /usr/lib
 }
 !isEmpty(target.path): INSTALLS += target
+
+FORMS += \
+    semcwidget.ui

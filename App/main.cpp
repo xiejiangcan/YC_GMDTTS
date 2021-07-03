@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QStyleFactory>
+//#include "vld.h"
 
 int main(int argc, char *argv[])
 {

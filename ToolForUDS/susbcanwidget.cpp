@@ -1,6 +1,7 @@
 ﻿#include "susbcanwidget.h"
 
 #include "tool/usbinterface.h"
+#include "tool/ycanhandle.h"
 
 static QStringList _baudList = QStringList() << "5Kbps"
                                              << "10kbps"
@@ -29,7 +30,8 @@ static const GUID GUID_DEVINTERFACE_LIST[] =
 
 SUsbCanWidget::SUsbCanWidget(SMainWindow *mainWindow, QWidget *parent)
     : SWidget(mainWindow, parent),
-      m_switchBtn(new QPushButton(QStringLiteral("连接"), this))
+      m_switchBtn(new QPushButton(QStringLiteral("连接"), this)),
+      m_handle(new YCanHandle(this))
 {
     for(int i = 0; i < G_LENGTH; ++i){
         m_groupBox[i] = new QGroupBox(this);
@@ -45,12 +47,22 @@ SUsbCanWidget::SUsbCanWidget(SMainWindow *mainWindow, QWidget *parent)
     registerDevice();
 
     connect(m_switchBtn, &QPushButton::clicked, this, &SUsbCanWidget::slotBtnClicked);
+    connect(m_handle, &YCanHandle::signCanMessage,
+            this, &SUsbCanWidget::slotCanMessage);
+}
+
+SUsbCanWidget::~SUsbCanWidget()
+{
+    if(m_thread.isRunning()){
+        m_thread.stop();
+        m_thread.wait();
+        m_thread.quit();
+    }
 }
 
 void SUsbCanWidget::initWidget()
 {
     m_deviceList = canDeviceList();
-    initHandles();
 
     m_radioBtns[B_TYPE1]->setText(QStringLiteral("USBCAN I"));
     m_radioBtns[B_TYPE2]->setText(QStringLiteral("USBCAN II"));
@@ -92,24 +104,6 @@ void SUsbCanWidget::initWidget()
     this->layout()->addWidget(m_switchBtn);
 }
 
-void SUsbCanWidget::initHandles()
-{
-    while(m_deviceList.size() != m_handles.size()){
-        if(m_handles.size() < m_deviceList.size()){
-            YCanHandle* handle = new YCanHandle(this);
-            connect(handle, &YCanHandle::signCanMessage,
-                    this, &SUsbCanWidget::slotCanMessage);
-            m_handles.append(handle);
-        }else{
-            YCanHandle* handle = m_handles.last();
-            m_handles.removeOne(handle);
-            disconnect(handle, &YCanHandle::signCanMessage,
-                       this, &SUsbCanWidget::slotCanMessage);
-            delete handle;
-        }
-    }
-}
-
 void SUsbCanWidget::registerDevice()
 {
     HDEVNOTIFY hDevNotify;
@@ -117,13 +111,6 @@ void SUsbCanWidget::registerDevice()
     ZeroMemory(&NotifacationFiler, sizeof(DEV_BROADCAST_DEVICEINTERFACE));
     NotifacationFiler.dbcc_size = sizeof(DEV_BROADCAST_DEVICEINTERFACE);
     NotifacationFiler.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
-    //    NotifacationFiler.dbcc_classguid = GUID_CANUSB;
-    //    hDevNotify = RegisterDeviceNotification((HANDLE)this->winId(),
-    //                                            &NotifacationFiler,
-    //                                            DEVICE_NOTIFY_WINDOW_HANDLE);
-    //    if(!hDevNotify){
-    //        qDebug() << QStringLiteral("注册失败");
-    //    }
 
     for (int i = 0; i < sizeof(GUID_DEVINTERFACE_LIST) / sizeof(GUID); i++)
     {
@@ -159,7 +146,7 @@ bool SUsbCanWidget::nativeEvent(const QByteArray &eventType, void *message, long
                 if(name.contains("VID_0C66") &&
                         name.contains("PID_000C")){
                     m_deviceList = canDeviceList();
-                    initHandles();
+                    m_handle->setDeviceSize(m_deviceList.size());
                     m_comboBox[C_DEVLST]->clear();
                     m_comboBox[C_DEVLST]->addItems(m_deviceList);
                 }
@@ -175,7 +162,7 @@ bool SUsbCanWidget::nativeEvent(const QByteArray &eventType, void *message, long
                 if(name.contains("VID_0C66") &&
                         name.contains("PID_000C")){
                     m_deviceList = canDeviceList();
-                    initHandles();
+                    m_handle->setDeviceSize(m_deviceList.size());
                     m_comboBox[C_DEVLST]->clear();
                     m_comboBox[C_DEVLST]->addItems(m_deviceList);
                 }
@@ -187,31 +174,55 @@ bool SUsbCanWidget::nativeEvent(const QByteArray &eventType, void *message, long
     return false;
 }
 
-
 Q_DECLARE_METATYPE(CAN_OBJ)
+int SUsbCanWidget::controlThread(void *pParam, const bool &bRunning)
+{
+    SUsbCanWidget* pWidget = (SUsbCanWidget*)pParam;
+    QVector<uint> mVersionCMD;
+    CAN_OBJ sendObj;
+    QString nameCMD;
+    if(pWidget){
+        QByteArray DataDAQ;
+        while(bRunning){
+            SObject* pObjBuff = pWidget->sobject()->findChild<SObject*>(MSG_BUFF);
+            if(pObjBuff){
+                int nSumBuff = pObjBuff->property(SEND_BUFF_NUM).toInt();
+                while(mVersionCMD.size()!= nSumBuff){
+                    if(mVersionCMD.size()> nSumBuff)
+                        mVersionCMD.removeLast();
+                    else
+                        mVersionCMD.append(1);
+                }
+                for(int i = 0; i < nSumBuff; ++i){
+                    nameCMD = SEND_BUFF_ + QString::number(i);
+                    if(pObjBuff->propertyInfo().contains(nameCMD)){
+                        uint tempVersionCMD = pObjBuff->propertyInfo()[nameCMD].m_version;
+                        if(mVersionCMD[i] != tempVersionCMD){
+                            sendObj = pObjBuff->property(nameCMD.toLatin1().data()).value<CAN_OBJ>();
+                            pWidget->m_handle->SendData(sendObj);
+                        }
+                    }
+                }
+            }
+            QThread::msleep(1);
+        }
+    }
+    return 0;
+}
 
-void SUsbCanWidget::slotCanMessage(const CAN_OBJ &buf)
+Q_DECLARE_METATYPE(CAN_MESSAGE_PACKAGE)
+void SUsbCanWidget::slotCanMessage(const CAN_MESSAGE_PACKAGE &buf)
 {
     YCanHandle* handle = qobject_cast<YCanHandle*>(sender());
     if(!handle){
         return;
     }
-    int index = m_handles.indexOf(handle);
-    while(m_dataVersion.size() != m_handles.size()){
-        if(m_dataVersion.size()> m_handles.size())
-            m_dataVersion.removeLast();
-        else
-            m_dataVersion.append(1);
-    }
 
     SObject* pBuff = this->sobject()->findChild<SObject*>(MSG_BUFF);
-    QString name = QString(BUFF_) + QString::number(index);
+    QString name = QString(RECEIVE_BUFF);
     if(pBuff){
-        uint tempVersion = pBuff->propertyInfo()[name].m_version;
-        if(tempVersion != m_dataVersion[index]){
-            pBuff->setPropertyS(name.toLatin1().data(), QVariant::fromValue(buf));
-            m_dataVersion[index] = tempVersion;
-        }
+        pBuff->setPropertyS(name.toLatin1().data(), QVariant::fromValue(buf));
+        //pBuff->setPropertyEx(name.toLatin1().data(), can2ByteArray(buf));
     }
 }
 
@@ -219,35 +230,29 @@ void SUsbCanWidget::slotBtnClicked()
 {
     if(m_isOpen){
         m_isOpen = false;
+        m_handle->CloseAll();
         m_switchBtn->setText(QStringLiteral("连接"));
     }else{
         m_isOpen = true;
+        m_handle->setDeviceType(m_radioBtns[B_TYPE1]->isChecked() ? USBCAN1 : USBCAN2);
+        m_handle->setBaudType((BaudType)m_comboBox[C_BAUD]->currentIndex());
+        m_handle->OpenAll();
         m_switchBtn->setText(QStringLiteral("断开"));
     }
     m_groupBox[G_BAUD]->setEnabled(!m_isOpen);
     m_groupBox[G_CHANNEL]->setEnabled(!m_isOpen);
     m_groupBox[G_DEVTYPE]->setEnabled(!m_isOpen);
 
-    for(int i = 0; i < m_handles.size(); ++i){
-        if(m_isOpen){
-            m_handles[i]->setBaudType((BaudType)m_comboBox[C_BAUD]->currentIndex());
-            m_handles[i]->setCanInd(m_radioBtns[B_CHA1]->isChecked() ? 0 : 1);
-            m_handles[i]->setDeviceType(m_radioBtns[B_TYPE1]->isChecked() ? USBCAN1 : USBCAN2);
-            m_handles[i]->setDeviceInd(i);
-            m_handles[i]->Open();
-        }else{
-            m_handles[i]->Close();
-        }
-    }
-
     this->setProperty(CAN_DEVICE_TYPE, m_radioBtns[B_TYPE1]->isChecked() ? 1 : 2);
     this->setProperty(CAN_CHANNEL, m_radioBtns[B_CHA1]->isChecked() ? 1 : 2);
     this->setProperty(CAN_BAUD, m_comboBox[C_BAUD]->currentIndex());
+    sobject()->setPropertyEx(CAN_OPENSTATE, m_isOpen);
 }
 
 void SUsbCanWidget::setSObject(SObject *obj)
 {
     SWidget::setSObject(obj);
+
     if(obj->property(CAN_DEVICE_TYPE).toInt() == 2){
         m_radioBtns[B_TYPE1]->setChecked(false);
         m_radioBtns[B_TYPE2]->setChecked(true);
@@ -266,6 +271,12 @@ void SUsbCanWidget::setSObject(SObject *obj)
     uint index = obj->property(CAN_BAUD).toUInt();
     if(index < m_comboBox[C_BAUD]->count())
         m_comboBox[C_BAUD]->setCurrentIndex(index);
+
+    m_handle->setDeviceSize(m_deviceList.size());
+
+    m_thread.setUserFunction(controlThread);
+    m_thread.setUserParam(this);
+    m_thread.start();
 }
 
 void SUsbCanWidget::propertyOfSObjectChanged(SObject *obj,
@@ -287,12 +298,14 @@ QString SUsbCanWidget::keyString()
 void SUsbCanWidget::initSObject(SObject *obj)
 {
     obj->setObjectName(USB_CAN);
+    obj->setProperty(STR_ID, "can");
     obj->setProperty(CAN_DEVICE_TYPE, 2);
     obj->setProperty(CAN_CHANNEL, 2);
     obj->setProperty(CAN_BAUD, 11);
+    obj->setProperty(CAN_OPENSTATE, false);
 
     SObject* pChildBuff = new SObject(obj);
     pChildBuff->setSObjectName(MSG_BUFF);
-    pChildBuff->setProperty(BUFF_NUM, 8);
+    pChildBuff->setProperty(STR_ID, "buff");
+    pChildBuff->setProperty(SEND_BUFF_NUM, 8);
 }
-

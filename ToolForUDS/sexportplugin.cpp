@@ -3,12 +3,18 @@
 #include "scanmessagewidgt.h"
 #include "slistwidgetforlog.h"
 #include "susbcanwidget.h"
+#include "sudswidget.h"
+#include "semcwidget.h"
+#include "semctablewidget.h"
 
 QStringList SExportPlugin::keys() const
 {
     return QStringList() << SCanMessageWidgt::keyString()
                          << SListWidgetForLog::keyString()
-                         << SUsbCanWidget::keyString();
+                         << SUsbCanWidget::keyString()
+                         << SUdsWidget::keyString()
+                         << SEmcWidget::keyString()
+                         << SEmcTableWidget::keyString();
 }
 
 QObject *SExportPlugin::create(const QString &strKey, SMainWindow *pMainWindow, QObject *pParent)
@@ -20,7 +26,14 @@ QObject *SExportPlugin::create(const QString &strKey, SMainWindow *pMainWindow, 
         return new SListWidgetForLog(pMainWindow, pParentW);
     }else if(SUsbCanWidget::keyString() == strKey){
         return new SUsbCanWidget(pMainWindow, pParentW);
+    }else if(SUdsWidget::keyString() == strKey){
+        return new SUdsWidget(pMainWindow, pParentW);
+    }else if(SEmcWidget::keyString() == strKey){
+        return new SEmcWidget(pMainWindow, pParentW);
+    }else if(SEmcTableWidget::keyString() == strKey){
+        return new SEmcTableWidget(pMainWindow, pParentW);
     }
+
     return nullptr;
 }
 
@@ -39,6 +52,18 @@ SObject *SExportPlugin::sobject(const QString &strKey, SObject *pParent)
         pObj = new SObject(pParent);
         SWidget::initializeSObject(pObj);
         SUsbCanWidget::initSObject(pObj);
+    }else if(SUdsWidget::keyString() == strKey){
+        pObj = new SObject(pParent);
+        SWidget::initializeSObject(pObj);
+        SUdsWidget::initSObject(pObj);
+    }else if(SEmcWidget::keyString() == strKey){
+        pObj = new SObject(pParent);
+        SWidget::initializeSObject(pObj);
+        SEmcWidget::initSObject(pObj);
+    }else if(SEmcTableWidget::keyString() == strKey){
+        pObj = new SObject(pParent);
+        SWidget::initializeSObject(pObj);
+        SEmcTableWidget::initSObject(pObj);
     }
     if(pObj != NULL){
         pObj->setObjectName(strKey.split('@')[1]);
