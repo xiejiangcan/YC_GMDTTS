@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QVariantMap>
+#include <QTimer>
 
 #include "COMM_APA_Rx_Decode.h"
 #include "ECanVci.h"
@@ -13,6 +14,8 @@ enum _CAN_ID
     EMCT_MSG_2 = 601,
     EMCT_MSG_3 = 602,
     EMCT_MSG_4 = 603,
+    EMCT_MSG_5 = 610,
+    EMCT_MSG_6 = 620
 };
 
 class DecodeTools : public QObject
@@ -36,9 +39,13 @@ public:
     static inline bool dbc_decode_emcTmsg3(emcTmsg3 *to, const uint8_T bytes[8]);
     static inline bool dbc_decode_emcTmsg4(emcTmsg4 *to, const uint8_T bytes[8]);
 
+public slots:
+    void slotTimeOut();
+
 private:
     S4_VEH_RX_DATA      VsCOMM_S4_VEH_RX_Data;
     uint                mFlag;
+    QTimer              mTime;
 };
 
 #endif // DECODETOOLS_H

@@ -104,6 +104,11 @@ void SEmcTableWidget::slotUpdateTable(QString str)
         return;
     }
     QString signalName = strList.first();
+    if(strList.last().isEmpty()){
+        // Time out
+        m_model->setDevTimeout(signalName);
+        return;
+    }
     QStringList propMap = strList.last().split(";");
     QMap<QString, QVariantMap> result;
     for(auto iter = propMap.begin(); iter != propMap.end(); ++iter){

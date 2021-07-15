@@ -12,6 +12,7 @@ public:
 
     // setting
     void setIsHex(bool enable);
+    void setDevInfo(QString devInfo);
     void setTimeRange(const QString& low, const QString& high);
     void setCanIDRange(const QString& low, const QString& high);
 
@@ -20,6 +21,7 @@ protected:
                           const QModelIndex &source_parent) const override;
 
 private:
+    QString         m_devInfo;
     uint            m_timeL;
     uint            m_timeH;
     uint            m_canIDL;

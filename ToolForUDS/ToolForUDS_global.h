@@ -24,6 +24,7 @@
 #include <QSortFilterProxyModel>
 #include <QHeaderView>
 #include <QSpacerItem>
+#include <QTimer>
 
 
 #if defined(TOOLFORUDS_LIBRARY)

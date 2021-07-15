@@ -11,6 +11,7 @@ public:
     explicit EmcResultModel(QObject *parent = nullptr);
 
     void updateModel(const QString &name, const QMap<QString, QVariantMap>& map);
+    void setDevTimeout(const QString& name);
 
     // Header:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -24,11 +25,13 @@ public:
 protected:
     QVariant hHeaderInfo(int section) const;
     QVariant vHeaderInfo(int section) const;
+    QVariant vHeaderColor(int section) const;
     QVariant getValueFromModel(int row, int column) const;
     QVariant getColorFromModel(int row, int column) const;
 
 private:
-    QMap<QString, QMap<QString, QVariantMap>> m_model;
+    QMap<QString, QMap<QString, QVariantMap>>   m_model;
+    QStringList                                 m_timeoutList;
 };
 
 #endif // EMCRESULTMODEL_H

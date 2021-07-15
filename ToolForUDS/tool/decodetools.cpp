@@ -4,7 +4,8 @@ DecodeTools::DecodeTools(QObject *parent)
     : QObject(parent)
     , mFlag(0)
 {
-
+    connect(&mTime, &QTimer::timeout,
+            this, &DecodeTools::slotTimeOut);
 }
 
 DecodeTools::~DecodeTools()
@@ -36,7 +37,8 @@ QVariantMap DecodeTools::GetMap() const
     info.insert(QStringLiteral("SYS_IO_1P8V"), QVariant::fromValue(VsCOMM_S4_VEH_RX_Data.emcTmsg3_25A.SYS_IO_1P8V_ADC));
     info.insert(QStringLiteral("板上温度"), QVariant::fromValue(VsCOMM_S4_VEH_RX_Data.emcTmsg3_25A.NTC_temp_ADC));
     info.insert(QStringLiteral("J2工作状态"), QVariant::fromValue(VsCOMM_S4_VEH_RX_Data.emcTmsg4_25B.J2_STAT_OK));
-    info.insert(QStringLiteral("CAN2"), QVariant::fromValue(VsCOMM_S4_VEH_RX_Data.emcTmsg4_25B.CAN_STAT_OK));
+    info.insert(QStringLiteral("CAN2"), QVariant::fromValue(VsCOMM_S4_VEH_RX_Data.emcTmsg5_262.CAN2_STAT_OK));
+    info.insert(QStringLiteral("CAN3"), QVariant::fromValue(VsCOMM_S4_VEH_RX_Data.emcTmsg6_26C.CAN3_STAT_OK));
     info.insert(QStringLiteral("J2温度"), QVariant::fromValue(VsCOMM_S4_VEH_RX_Data.emcTmsg3_25A.J2_TEMP_ADC));
     info.insert(QStringLiteral("CPU"), QVariant::fromValue(VsCOMM_S4_VEH_RX_Data.emcTmsg4_25B.CPU_USED_RATE));
     info.insert(QStringLiteral("BPU"), QVariant::fromValue(VsCOMM_S4_VEH_RX_Data.emcTmsg4_25B.BPU_USED_RATE));
@@ -62,13 +64,25 @@ void DecodeTools::AddNewMessage(UINT ID, const uint8_T bytes[])
         mFlag |= 1 << 3;
         dbc_decode_emcTmsg4(&VsCOMM_S4_VEH_RX_Data.emcTmsg4_25B, bytes);
         break;
+    case _CAN_ID::EMCT_MSG_5:
+        mFlag |= 1 << 4;
+        VsCOMM_S4_VEH_RX_Data.emcTmsg5_262.CAN2_STAT_OK = 0x1;
+        break;
+    case _CAN_ID::EMCT_MSG_6:
+        mFlag |= 1 << 5;
+        VsCOMM_S4_VEH_RX_Data.emcTmsg6_26C.CAN3_STAT_OK = 0x1;
+        break;
     default: break;
     }
 }
 
 bool DecodeTools::IsDataFull()
 {
-    if(mFlag == 15){
+    if(!mTime.isActive()){
+        mTime.start(2000);
+    }
+
+    if(mFlag == 0xF){
         mFlag = 0;
         return true;
     }
@@ -145,8 +159,6 @@ bool DecodeTools::dbc_decode_emcTmsg3(emcTmsg3 *to, const uint8_T bytes[])
 bool DecodeTools::dbc_decode_emcTmsg4(emcTmsg4 *to, const uint8_T bytes[])
 {
     uint32_T raw;
-    to->J2_STAT_OK = 0;
-    to->CAN_STAT_OK = 0;
 
     raw  = ((uint32_T)((bytes[0]))); ///< 8 bit(s) from B7
     to->CPU_USED_RATE = ((raw));
@@ -154,4 +166,23 @@ bool DecodeTools::dbc_decode_emcTmsg4(emcTmsg4 *to, const uint8_T bytes[])
     to->BPU_USED_RATE = ((raw));
 
     return true;
+}
+
+void DecodeTools::slotTimeOut()
+{
+    if((mFlag & (0x1 << 4))){
+        // can2 ok
+    }else{
+        // can2 disconnect
+        VsCOMM_S4_VEH_RX_Data.emcTmsg5_262.CAN2_STAT_OK = 0x0;
+    }
+
+    if((mFlag & (0x1 << 5))){
+        // can3 ok
+    }else{
+        // can3 disconnect
+        VsCOMM_S4_VEH_RX_Data.emcTmsg6_26C.CAN3_STAT_OK = 0x0;
+    }
+
+    mFlag = 0x0;
 }

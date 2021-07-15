@@ -70,10 +70,10 @@ bool SObject::setProperty(const char *name,
         res = QObject::setProperty(name, value);
         m_lock.unlock();
     }else{
-        qDebug() << this->objectName()
-                 << QString(": try lock %1 for write %2 failed")
-                    .arg(name)
-                    .arg(value.toString());
+//        qDebug() << this->objectName()
+//                 << QString(": try lock %1 for write %2 failed")
+//                    .arg(name)
+//                    .arg(value.toString());
     }
 
     return res;

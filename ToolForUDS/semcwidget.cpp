@@ -20,7 +20,8 @@ QMap<QString, QPair<double, double>> _EMC_VALUE_RANGE = {
     {QStringLiteral("SYS_IO_1P8V"), {1, 10}},
     {QStringLiteral("板上温度"), {0, 125}},
     {QStringLiteral("J2工作状态"), {0, 0.5}},
-    {QStringLiteral("CAN2"), {1, 0.5}},
+    {QStringLiteral("CAN2"), {0.5, 1.5}},
+    {QStringLiteral("CAN3"), {0.5, 1.5}},
     {QStringLiteral("J2温度"), {0, 125}},
     {QStringLiteral("CPU"), {1, 100}},
     {QStringLiteral("BPU"), {1, 100}}
@@ -28,11 +29,15 @@ QMap<QString, QPair<double, double>> _EMC_VALUE_RANGE = {
 
 SEmcWidget::SEmcWidget(SMainWindow *mainWindow, QWidget *parent) :
     SWidget(mainWindow, parent),
-    ui(new Ui::SEmcWidget)
+    ui(new Ui::SEmcWidget),
+    m_timer(new QTimer(this)),
+    m_timeOutFlag(true)
 {
     ui->setupUi(this);
 
     initConfig();
+
+    connect(m_timer, &QTimer::timeout, this, &SEmcWidget::slotTimeOut);
 }
 
 SEmcWidget::~SEmcWidget()
@@ -54,7 +59,8 @@ void SEmcWidget::setSObject(SObject *obj)
     ui->LB_title->setText(title);
     ui->LB_Filepath->setText(obj->property(EMC_FILEPATH).toString());
 
-    m_saveTimer = startTimer(obj->property(EMC_DATAFREQ).toUInt());
+    uint time = obj->property(EMC_DATAFREQ).toUInt();
+    m_timer->start(time);
     m_devInd = obj->property(EMC_DEVIND).toUInt();
     m_devChan = obj->property(EMC_DEVCHAN).toUInt();
     QString strDevInd = QString("DevInd: %1").arg(m_devInd);
@@ -126,6 +132,7 @@ QString SEmcWidget::InitFileString()
     result += QString("NTC_temp\t");
     result += QString("J2_state\t");
     result += QString("CAN2_state\t");
+    result += QString("CAN3_state\t");
     result += QString("CPU_USED_RATE\t");
     result += QString("BPU_USED_RATE\n");
 
@@ -156,7 +163,8 @@ QString SEmcWidget::DataToString(const S4_VEH_RX_DATA &data)
     result += QString::number(data.emcTmsg3_25A.NTC_temp_ADC) + "\t";
 
     result += QString::number(data.emcTmsg4_25B.J2_STAT_OK) + "\t";
-    result += QString::number(data.emcTmsg4_25B.CAN_STAT_OK) + "\t";
+    result += QString::number(data.emcTmsg5_262.CAN2_STAT_OK) + "\t";
+    result += QString::number(data.emcTmsg6_26C.CAN3_STAT_OK) + "\t";
     result += QString::number(data.emcTmsg4_25B.CPU_USED_RATE) + "\t";
     result += QString::number(data.emcTmsg4_25B.BPU_USED_RATE) + "\n";
 
@@ -237,16 +245,10 @@ int SEmcWidget::controlThread(void *pParam, const bool &bRunning)
     return 0;
 }
 
-void SEmcWidget::timerEvent(QTimerEvent *evt)
-{
-    if(evt->timerId() != m_saveTimer)
-        return;
-    if(!m_saveFlag)
-        m_saveFlag = true;
-}
-
 void SEmcWidget::analysisData(const CAN_OBJ &source)
 {
+    m_timeOutFlag = false;
+    m_changeFlag = true;
     m_tool.AddNewMessage(source.ID, source.Data);
     auto map = m_tool.GetMap();
     for(auto iter = map.begin(); iter != map.end(); ++iter){
@@ -284,7 +286,8 @@ void SEmcWidget::analysisData(const CAN_OBJ &source)
     auto data = m_tool.GetData();
     if(m_saveFlag){
         if(!mFileTool.IsOpen()){
-            mFileTool.OpenFile();
+            mFileTool.OpenFile(this->sobject()->objectName());
+            mFileTool.WriteData(InitFileString());
         }
         mFileTool.WriteData(DataToString(data));
         m_saveFlag = false;
@@ -304,6 +307,7 @@ void SEmcWidget::fileOperation(bool open)
 {
     if(open){
         mFileTool.OpenFile(this->sobject()->objectName());
+        mFileTool.WriteData(InitFileString());
     }else{
         mFileTool.CloseFile();
         QString filepath = ui->LB_Filepath->text();
@@ -338,6 +342,7 @@ void SEmcWidget::initConfig()
     m_result[QStringLiteral("板上温度")]["label"] = QVariant::fromValue(ui->LB_Temp);
     m_result[QStringLiteral("J2工作状态")]["label"] = QVariant::fromValue(ui->LB_J2_Status);
     m_result[QStringLiteral("CAN2")]["label"] = QVariant::fromValue(ui->LB_CAN2_Status);
+    m_result[QStringLiteral("CAN3")]["label"] = QVariant::fromValue(ui->LB_CAN3_Status);
     m_result[QStringLiteral("J2温度")]["label"] = QVariant::fromValue(ui->LB_Temp_J2);
     m_result[QStringLiteral("CPU")]["label"] = QVariant::fromValue(ui->LB_CPU);
     m_result[QStringLiteral("BPU")]["label"] = QVariant::fromValue(ui->LB_BPU);
@@ -362,10 +367,39 @@ QString SEmcWidget::getResultStr()
     return str;
 }
 
+QString SEmcWidget::getTimeoutStr()
+{
+    QString str = sobject()->objectName() + "@";
+    return str;
+}
+
 void SEmcWidget::on_btn_file_clicked()
 {
     auto filepath = QFileDialog::getExistingDirectory((QWidget*)this, tr("Save File"), "");
     ui->LB_Filepath->setText(filepath);
     this->sobject()->setPropertyS(EMC_FILEPATH, filepath);
+}
+
+void SEmcWidget::slotTimeOut()
+{
+    if(!m_saveFlag)
+        m_saveFlag = true;
+    if(m_timeOutFlag && m_changeFlag){
+        if(isMapped(STR_RESULTOUT)){
+            auto mapResult = mapping()[STR_RESULTOUT];
+            if(!mapResult.isEmpty()){
+                SObject *resultObj = (SObject*)mapResult[STR_VALUE].value<void*>();
+                if(resultObj){
+                    QString result = getTimeoutStr();
+                    QString propName = mapResult[STR_PROP].toString();
+                    if(!propName.isEmpty()){
+                        resultObj->setPropertyS(propName, result);
+                    }
+                }
+            }
+        }
+        m_changeFlag = false;
+    }
+    m_timeOutFlag = true;
 }
 

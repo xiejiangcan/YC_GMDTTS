@@ -7,11 +7,17 @@ CanMessageProxyModel::CanMessageProxyModel(QObject *parent)
     m_timeH = (~0x0);
     m_canIDL = 0x0;
     m_canIDH = (~0x0);
+    m_devInfo = QString("");
 }
 
 void CanMessageProxyModel::setIsHex(bool enable)
 {
     mIsHex = enable;
+}
+
+void CanMessageProxyModel::setDevInfo(QString devInfo)
+{
+    m_devInfo = devInfo;
 }
 
 void CanMessageProxyModel::setTimeRange(const QString &low, const QString &high)
@@ -50,10 +56,18 @@ bool CanMessageProxyModel::filterAcceptsRow(int source_row,
 {
     QModelIndex index0 = sourceModel()->index(source_row, 0, source_parent);
     QModelIndex index1 = sourceModel()->index(source_row, 1, source_parent);
+    QModelIndex index2 = sourceModel()->index(source_row, 2, source_parent);
 
-    uint time = sourceModel()->data(index0).toString().toUInt(nullptr, mIsHex ? 16 : 10);
-    uint canID = sourceModel()->data(index1).toString().toUInt(nullptr, mIsHex ? 16 : 10);
+    QString dev = sourceModel()->data(index0).toString();
+    uint time = sourceModel()->data(index1).toString().toUInt(nullptr, mIsHex ? 16 : 10);
+    uint canID = sourceModel()->data(index2).toString().toUInt(nullptr, mIsHex ? 16 : 10);
 
-    return time <= m_timeH && time >= m_timeL
+    if(m_devInfo.isEmpty()){
+        return time <= m_timeH && time >= m_timeL
+                && canID <= m_canIDH && canID >= m_canIDL;
+    }
+
+    return dev == m_devInfo
+            && time <= m_timeH && time >= m_timeL
             && canID <= m_canIDH && canID >= m_canIDL;
 }

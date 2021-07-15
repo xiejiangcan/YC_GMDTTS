@@ -6,18 +6,19 @@
 #include "tool/udsservertree.h"
 #include "tool/udsserver.h"
 #include "model/udscanidmapmodel.h"
+#include "model/canmessagemodel.h"
 
 class TOOLFORUDS_EXPORT SUdsWidget : public SWidget
 {
     Q_OBJECT
 public:
-    enum LEditT{E_CANID, E_SDATA, E_PCBS, E_PCST, E_P2TIME, E_LENGTH};
+    enum LEditT{E_CANID, E_SDATA, E_FCBS, E_FCST, E_P2TIME, E_LENGTH};
     enum LabelT{L_SERPARAM, L_SERPARAM_V, L_CANID,
                 L_SDATA, L_ADATA, L_ADATA_V,
-                L_BDATA, L_BDATA_V, L_PCBS, L_PCST, L_P2TIME, L_LENGTH};
+                L_BDATA, L_BDATA_V, L_FCBS, L_FCST, L_P2TIME, L_LENGTH};
     enum PButtonT{B_SEND, B_ADD, B_LENGTH};
     enum GroupBoxT{G_MAPTABLE, G_SERTREE, G_SENDCONF,
-                   G_BACK, G_CONFIG, G_HANDLST, G_LENGTH};
+                   G_BACK, G_LENGTH};
     enum TableViewT{T_DATA, T_MAP, T_LENGTH};
 public:
     SUdsWidget(SMainWindow *mainWindow, QWidget *parent = 0);
@@ -38,9 +39,16 @@ protected:
 
     void initWidget();
 
+signals:
+    void signPackAna(const CAN_MESSAGE_PACKAGE &pack);
+
 protected slots:
     void slotSendClicked();
     void slotAddClicked();
+    void slotServerChanged(const QString &server);
+    void slotServerFinished();
+    void slotChangedUdsParams();
+    void slotTimeout();
 
 private:
     QTableView*         m_tables[T_LENGTH];
@@ -50,10 +58,11 @@ private:
     QGroupBox*          m_groupBoxs[G_LENGTH];
     UdsServerTree*      m_serverTree = nullptr;
     UdsCanIdMapModel*   m_canIDMapModel = nullptr;
+    CanMessageModel*    m_msgModel = nullptr;
     QCheckBox*          m_heartBeat = nullptr;
 
     UdsServer*          m_server = nullptr;
-
+    QTimer              m_time;
 };
 
 #endif // SUDSWIDGET_H

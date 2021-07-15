@@ -24,8 +24,9 @@ enum BaudType {
 
 struct CAN_MESSAGE_PACKAGE
 {
-    int         devInd;
-    int         devChan;
+    int         devInd = -1;
+    int         devChan = -1;
+    QString     type;
     QVariant    canObj;
 };
 
@@ -66,7 +67,7 @@ public:
 
     QString GetLastError();
 
-protected:
+public:
     bool OpenDev(int devInd);
     bool OpenChan(int devInd, int devChan);
     bool CloseDev(int devInd);

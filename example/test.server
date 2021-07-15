@@ -37,5 +37,13 @@
      </item>
     </children>
    </item>
+   <item name="">
+    <property>
+     <item name="UDS1"/>
+     <item value="22"/>
+     <item item=""/>
+    </property>
+    <children/>
+   </item>
   </children>
  </server_tree>

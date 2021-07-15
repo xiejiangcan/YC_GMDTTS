@@ -45,14 +45,17 @@ SUsbCanWidget::SUsbCanWidget(SMainWindow *mainWindow, QWidget *parent)
 
     initWidget();
     registerDevice();
+    m_timer.start(50);
 
     connect(m_switchBtn, &QPushButton::clicked, this, &SUsbCanWidget::slotBtnClicked);
     connect(m_handle, &YCanHandle::signCanMessage,
             this, &SUsbCanWidget::slotCanMessage);
+    connect(&m_timer, &QTimer::timeout, this, &SUsbCanWidget::slotTimeout);
 }
 
 SUsbCanWidget::~SUsbCanWidget()
 {
+    m_timer.stop();
     if(m_thread.isRunning()){
         m_thread.stop();
         m_thread.wait();
@@ -191,15 +194,21 @@ int SUsbCanWidget::controlThread(void *pParam, const bool &bRunning)
                     if(mVersionCMD.size()> nSumBuff)
                         mVersionCMD.removeLast();
                     else
-                        mVersionCMD.append(1);
+                        mVersionCMD.append(0);
                 }
                 for(int i = 0; i < nSumBuff; ++i){
                     nameCMD = SEND_BUFF_ + QString::number(i);
                     if(pObjBuff->propertyInfo().contains(nameCMD)){
                         uint tempVersionCMD = pObjBuff->propertyInfo()[nameCMD].m_version;
                         if(mVersionCMD[i] != tempVersionCMD){
-                            sendObj = pObjBuff->property(nameCMD.toLatin1().data()).value<CAN_OBJ>();
-                            pWidget->m_handle->SendData(sendObj);
+                            QVariant value = pObjBuff->property(nameCMD.toLatin1().data());
+                            if(value.isValid() && !value.isNull()){
+                                int devIndex = pWidget->m_comboBox[C_DEVLST]->currentIndex();
+                                int chanIndex = pWidget->m_radioBtns[B_CHA1]->isChecked() ? 0 : 1;
+                                sendObj = value.value<CAN_OBJ>();
+                                pWidget->m_handle->SendDataToChan(sendObj, devIndex, chanIndex);
+                            }
+                            mVersionCMD[i] = tempVersionCMD;
                         }
                     }
                 }
@@ -218,12 +227,11 @@ void SUsbCanWidget::slotCanMessage(const CAN_MESSAGE_PACKAGE &buf)
         return;
     }
 
-    SObject* pBuff = this->sobject()->findChild<SObject*>(MSG_BUFF);
-    QString name = QString(RECEIVE_BUFF);
-    if(pBuff){
-        pBuff->setPropertyS(name.toLatin1().data(), QVariant::fromValue(buf));
-        //pBuff->setPropertyEx(name.toLatin1().data(), can2ByteArray(buf));
+    if(m_dataList.size() > 20){
+        m_dataList.removeFirst();
     }
+    m_dataList.append(buf);
+
 }
 
 void SUsbCanWidget::slotBtnClicked()
@@ -247,6 +255,18 @@ void SUsbCanWidget::slotBtnClicked()
     this->setProperty(CAN_CHANNEL, m_radioBtns[B_CHA1]->isChecked() ? 1 : 2);
     this->setProperty(CAN_BAUD, m_comboBox[C_BAUD]->currentIndex());
     sobject()->setPropertyEx(CAN_OPENSTATE, m_isOpen);
+}
+
+void SUsbCanWidget::slotTimeout()
+{
+    if(m_dataList.isEmpty())
+        return;
+    SObject* pBuff = this->sobject()->findChild<SObject*>(MSG_BUFF);
+    QString name = QString(RECEIVE_BUFF);
+    if(pBuff){
+        pBuff->setPropertyS(name.toLatin1().data(), QVariant::fromValue(m_dataList.takeFirst()));
+        //pBuff->setPropertyEx(name.toLatin1().data(), can2ByteArray(buf));
+    }
 }
 
 void SUsbCanWidget::setSObject(SObject *obj)

@@ -58,12 +58,27 @@ typedef struct {
 /// Message: emcTmsg4 from 'emcT', DLC: 8 byte(s), MID: 603
 typedef struct {
     uint8_T		 J2_STAT_OK;                     ///< B14:7   Destination: PC
-    uint8_T		 CAN_STAT_OK;                    ///< B22:15   Destination: PC
     uint8_T      CPU_USED_RATE;                  ///< B14:7   Destination: PC
     uint8_T      BPU_USED_RATE;                  ///< B22:15   Destination: PC
 } emcTmsg4;
 #endif
 
+#ifndef DEFINED_TYPEDEF_FOR_emcTmsg5__
+#define DEFINED_TYPEDEF_FOR_emcTmsg5__
+/// Message: emcTmsg5 from 'emcT', DLC: 8 byte(s), MID: 610
+typedef struct {
+    uint8_T		 CAN2_STAT_OK;                   ///< 610   Destination: PC
+} emcTmsg5;
+#endif
+
+
+#ifndef DEFINED_TYPEDEF_FOR_emcTmsg6__
+#define DEFINED_TYPEDEF_FOR_emcTmsg6__
+/// Message: emcTmsg5 from 'emcT', DLC: 8 byte(s), MID: 610
+typedef struct {
+    uint8_T		 CAN3_STAT_OK;                   ///< 620   Destination: PC
+} emcTmsg6;
+#endif
 
 #ifndef DEFINED_TYPEDEF_FOR_S4_VEH_RX_DATA_
 #define DEFINED_TYPEDEF_FOR_S4_VEH_RX_DATA_
@@ -74,6 +89,8 @@ typedef struct
     emcTmsg2 emcTmsg2_259;
     emcTmsg3 emcTmsg3_25A;
     emcTmsg4 emcTmsg4_25B;
+    emcTmsg5 emcTmsg5_262;
+    emcTmsg6 emcTmsg6_26C;
 }
 S4_VEH_RX_DATA;
 

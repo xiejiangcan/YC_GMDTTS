@@ -89,10 +89,11 @@ static inline boolean_T dbc_decode_emcTmsg3(emcTmsg3 *to, const uint8_T bytes[8]
 static inline boolean_T dbc_decode_emcTmsg4(emcTmsg4 *to, const uint8_T bytes[8])
 {
     uint32_T raw;
+
     raw  = ((uint32_T)((bytes[0]))); ///< 8 bit(s) from B7
-    to->J2_STAT_OK = ((raw));
+    to->CPU_USED_RATE = ((raw));
     raw  = ((uint32_T)((bytes[1]))); ///< 8 bit(s) from B15
-    to->CAN_STAT_OK = ((raw));
+    to->BPU_USED_RATE = ((raw));
 
     return success;
 }

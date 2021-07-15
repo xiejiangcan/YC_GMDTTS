@@ -8,9 +8,21 @@ EmcResultModel::EmcResultModel(QObject *parent)
 
 void EmcResultModel::updateModel(const QString &name, const QMap<QString, QVariantMap> &map)
 {
+    if(m_timeoutList.contains(name)){
+        m_timeoutList.removeOne(name);
+    }
     beginResetModel();
     m_model[name] = map;
     endResetModel();
+}
+
+void EmcResultModel::setDevTimeout(const QString &name)
+{
+    if(m_model.contains(name)){
+        beginResetModel();
+        m_timeoutList.append(name);
+        endResetModel();
+    }
 }
 
 QVariant EmcResultModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -24,6 +36,8 @@ QVariant EmcResultModel::headerData(int section, Qt::Orientation orientation, in
         }
     }else{
         switch (role) {
+        case Qt::BackgroundColorRole:
+            return vHeaderColor(section);
         case Qt::DisplayRole:
             return vHeaderInfo(section);
         default:
@@ -125,6 +139,15 @@ QVariant EmcResultModel::vHeaderInfo(int section) const
         return QVariant();
     }
     return iter.key();
+}
+
+QVariant EmcResultModel::vHeaderColor(int section) const
+{
+    QString title = vHeaderInfo(section).toString();
+    if(m_timeoutList.contains(title)){
+        return QColor(Qt::red);
+    }
+    return QVariant();
 }
 
 QVariant EmcResultModel::getValueFromModel(int row, int column) const

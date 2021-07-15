@@ -4,16 +4,24 @@ CanMessageModel::CanMessageModel(QObject *parent)
     : QAbstractTableModel(parent),
       mFreshCount(20)
 {
+    mTimer.start(500);
+    connect(&mTimer, &QTimer::timeout,
+            this, [&](){
+        if(mFreshCount != 20){
+            mFreshCount = 20;
+            updateModel();
+        }
+    });
 }
 
-void CanMessageModel::insertData(CAN_OBJ data, QString devID)
+void CanMessageModel::insertData(CAN_OBJ data, QString type, QString devID)
 {
-
     UINT time = QDateTime::currentDateTime().currentDateTime().toString("mmsszzz").toUInt();
     data.TimeStamp = time;
     ModelData model;
     model.obj = data;
     model.devID = devID;
+    model.type = type;
     mModel.append(model);
     if(mFreshCount != 0){
         --mFreshCount;
@@ -28,7 +36,7 @@ void CanMessageModel::insertData(const CAN_MESSAGE_PACKAGE &msg)
 {
     CAN_OBJ data = msg.canObj.value<CAN_OBJ>();
     QString devID = QString("Device_%1_C%2").arg(msg.devInd).arg(msg.devChan);
-    insertData(data, devID);
+    insertData(data, msg.type, devID);
 }
 
 void CanMessageModel::updateModel()
@@ -65,7 +73,7 @@ int CanMessageModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return 5;
+    return 6;
 }
 
 QVariant CanMessageModel::data(const QModelIndex &index, int role) const
@@ -90,12 +98,14 @@ QVariant CanMessageModel::headerInfo(int section) const
     case 0:
         return QStringLiteral("DEV ID");
     case 1:
-        return QStringLiteral("时间戳");
+        return QStringLiteral("数据流向");
     case 2:
-        return QStringLiteral("CAN ID");
+        return QStringLiteral("时间戳");
     case 3:
-        return QStringLiteral("数据长度");
+        return QStringLiteral("CAN ID");
     case 4:
+        return QStringLiteral("数据长度");
+    case 5:
         return QStringLiteral("CAN报文");
     default:
         return QVariant();
@@ -109,12 +119,14 @@ QVariant CanMessageModel::format(const ModelData &obj, int column) const
     case 0:
         return obj.devID;
     case 1:
-        return obj.obj.TimeStamp;
+        return obj.type;
     case 2:
-        return QString("%1").arg(obj.obj.ID, 0, base);
+        return obj.obj.TimeStamp;
     case 3:
-        return obj.obj.DataLen;
+        return QString("%1").arg(obj.obj.ID, 0, base);
     case 4:
+        return obj.obj.DataLen;
+    case 5:
         return QString("%1 %2 %3 %4 %5 %6 %7 %8")
                 .arg(obj.obj.Data[0], 2, base, QLatin1Char('0'))
                 .arg(obj.obj.Data[1], 2, base, QLatin1Char('0'))
@@ -124,7 +136,7 @@ QVariant CanMessageModel::format(const ModelData &obj, int column) const
                 .arg(obj.obj.Data[5], 2, base, QLatin1Char('0'))
                 .arg(obj.obj.Data[6], 2, base, QLatin1Char('0'))
                 .arg(obj.obj.Data[7], 2, base, QLatin1Char('0'));
-    case 5:
+    case 6:
         if(obj.obj.ExternFlag == 0)
         {
             return QStringLiteral("标准帧");
@@ -133,7 +145,7 @@ QVariant CanMessageModel::format(const ModelData &obj, int column) const
             return QStringLiteral("拓展帧");
         }
         return QString("NotDefine");
-    case 6:
+    case 7:
         if(obj.obj.SendType == 0)
         {
             return QStringLiteral("正常发送");
@@ -148,7 +160,7 @@ QVariant CanMessageModel::format(const ModelData &obj, int column) const
             return QStringLiteral("单次自发自收");
         }
         return QString("NotDefine");
-    case 7:
+    case 8:
         if(obj.obj.RemoteFlag == 0)
         {
             return QStringLiteral("数据帧");

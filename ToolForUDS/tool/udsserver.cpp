@@ -142,6 +142,7 @@ void UdsServer::sendFC()
 {
     CAN_OBJ obj;
     obj.ID = mSendCanID;
+    obj.DataLen = 8;
     obj.Data[0] = 0x30;
     obj.Data[1] = mRecvBlockSize;
     obj.Data[2] = mRecvSTmin;
@@ -160,12 +161,8 @@ void UdsServer::sendObj(const CAN_OBJ &obj)
             deProcess();
         }
     }else{
-        if(m_dataOutObj->lock().tryLockForWrite()){
-            m_dataOutObj->setProperty(m_propName, QVariant::fromValue(obj));
-            m_dataOutObj->lock().unlock();
-        }
+        m_dataOutObj->setPropertyS(m_propName, QVariant::fromValue(obj));
     }
-
 }
 
 void UdsServer::analysisCanObj(const CAN_OBJ &buf)
@@ -174,7 +171,6 @@ void UdsServer::analysisCanObj(const CAN_OBJ &buf)
         return;
     const BYTE* pData = buf.Data;
     UINT n_pcitype = (pData[0] & 0xF0) >> 4;
-    mOutTimer.stop();
     switch (n_pcitype) {
     case 0:{
         // 单帧数据
@@ -195,7 +191,7 @@ void UdsServer::analysisCanObj(const CAN_OBJ &buf)
         // 多帧数据流开始
         UINT pci = pData[0] & 0x0F;
         pci = (pci << 8) + pData[1];
-        if(pci >= 0x0 || pci < 0x7){ // ignore this frame
+        if(pci >= 0x0 && pci < 0x7){ // ignore this frame
             qDebug() << "ignore this frame";
             return;
         }else if(pci > 0xFFF){ // overflow
@@ -203,8 +199,7 @@ void UdsServer::analysisCanObj(const CAN_OBJ &buf)
             return;
         }else{
             mIsCF = true;
-            mRecvBlockSize = pci;
-            mLastFrames = mRecvBlockSize - 6;
+            mLastFrames = pci - 6;
             mBackPack.clear();
             for(UINT i = 2; i < 8; ++i){
                 mBackPack.append(QString("%1 ").arg(pData[i], 2, 16));
@@ -272,6 +267,7 @@ void UdsServer::analysisCanObj(const CAN_OBJ &buf)
         break;
     }
     }
+    mOutTimer.stop();
 }
 
 void UdsServer::setCanID(UINT sendID, UINT recvID)

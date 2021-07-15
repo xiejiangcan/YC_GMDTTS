@@ -180,6 +180,7 @@ Q_DECLARE_INTERFACE(SPluginInterface, "yc.mgdtts.interface/1.0")
 #define STR_TYPE        "type"
 #define STR_VALUE       "value"
 #define STR_DATASOURCE  "DataSource"
+#define STR_SENDSOURCE  "SendSource"
 #define STR_DATAOUT     "DataOut"
 #define STR_PARAMOUT    "ParamOut"
 #define STR_SIGNALOUT   "signalOut"
@@ -255,6 +256,7 @@ Q_DECLARE_INTERFACE(SPluginInterface, "yc.mgdtts.interface/1.0")
 // role
 #define STR_ROLE_ACTION     "action"
 #define STR_ROLE_MAPPING    "mapping"
+#define STR_ROLE_BIND       "bind"
 #define STR_ROLE_IMAGE      "image"
 // enable
 #define STR_BOOL_TRUE       "true"

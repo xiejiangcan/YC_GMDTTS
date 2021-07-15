@@ -3,13 +3,14 @@
 
 #include "ToolForUDS_global.h"
 #include "tool/ycanhandle.h"
-
+#include <QTimer>
 
 class CanMessageModel : public QAbstractTableModel
 {
     Q_OBJECT
     struct ModelData{
         QString devID;
+        QString type;
         CAN_OBJ obj;
     };
 
@@ -17,7 +18,7 @@ public:
     explicit CanMessageModel(QObject *parent = nullptr);
 
     // update function
-    void insertData(CAN_OBJ data, QString devID = "default dev");
+    void insertData(CAN_OBJ data, QString type, QString devID = "default dev");
     void insertData(const CAN_MESSAGE_PACKAGE& msg);
 
     void updateModel();
@@ -42,6 +43,7 @@ private:
     QVector<ModelData>      mModel;
     bool                    mIsHex = true;
     int                     mFreshCount = 100;
+    QTimer                  mTimer;
 };
 
 #endif // CANMESSAGEMODEL_H

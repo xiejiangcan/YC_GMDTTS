@@ -35,7 +35,6 @@ public:
 protected:
     SThread m_thread;
     static int controlThread(void *pParam, const bool &bRunning);
-    void timerEvent(QTimerEvent* evt) override;
 
     void analysisData(const CAN_OBJ &source);
     void analysisData(const CAN_MESSAGE_PACKAGE& source);
@@ -43,18 +42,22 @@ protected:
     void initConfig();
 
     QString getResultStr();
+    QString getTimeoutStr();
 
 private slots:
     void on_btn_file_clicked();
+    void slotTimeOut();
 
 private:
     Ui::SEmcWidget *ui;
     DecodeTools     m_tool;
     YFileOperation  mFileTool;
+    QTimer*         m_timer;
 
     QMap<QString, QVariantMap>  m_result;
-    int                         m_saveTimer;
     bool                        m_saveFlag;
+    bool                        m_timeOutFlag;
+    bool                        m_changeFlag;
 
     uint                        m_devInd;
     uint                        m_devChan;

@@ -10,8 +10,8 @@ class TOOLFORUDS_EXPORT SCanMessageWidgt : public SWidget
     Q_OBJECT
 public:
     enum CheckBoxT{C_HEX, C_AUTO, C_LENGTH};
-    enum LineEditT{L_TIMEL, L_TIMEH, L_CANIDL, L_CANIDH, L_LENGTH};
-    enum GroupBoxT{G_TIME, G_CANID, G_LENGTH};
+    enum LineEditT{L_DEV, L_TIMEL, L_TIMEH, L_CANIDL, L_CANIDH, L_LENGTH};
+    enum GroupBoxT{G_DEV, G_TIME, G_CANID, G_LENGTH};
 public:
     SCanMessageWidgt(SMainWindow *mainWindow, QWidget *parent = 0);
     ~SCanMessageWidgt();
