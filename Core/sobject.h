@@ -3,6 +3,11 @@
 
 #include "core_global.h"
 
+enum ENUM_SIGNAL_TYPE
+{
+    SIGNAL_CAN_MESSAGE = 0
+};
+
 class CORE_EXPORT SObject : public QObject
 {
     Q_OBJECT
@@ -49,9 +54,9 @@ public:
     QReadWriteLock& lock();
 
     // settings
-    bool setProperty(const char* name, const QVariant& value,
+    bool setPropertyP(const char* name, const QVariant& value,
                      const QObject* changedBy = nullptr);
-    bool setProperty(const QString& name, const QVariant& value,
+    bool setPropertyP(const QString& name, const QVariant& value,
                      const QObject* changedBy = nullptr);
     void setPropertyS(const QString& name, const QVariant &value,
                       const QObject* changedBy = nullptr);
@@ -95,6 +100,7 @@ protected:
     SObject* root();
 
 signals:
+    void signalNotifed(uint signType, QVariant data);
     void propertyChanged(SObject* pObj, const QString& strPropName,
                          const SObject::PropertyT& propChangedBy);
 private:

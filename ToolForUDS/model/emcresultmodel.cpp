@@ -4,6 +4,7 @@
 EmcResultModel::EmcResultModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
+
 }
 
 void EmcResultModel::updateModel(const QString &name, const QMap<QString, QVariantMap> &map)
@@ -59,7 +60,7 @@ int EmcResultModel::columnCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return 23;
+    return 19;
 }
 
 QVariant EmcResultModel::data(const QModelIndex &index, int role) const
@@ -103,28 +104,30 @@ QVariant EmcResultModel::hHeaderInfo(int section) const
         return QStringLiteral("VDD_DDR_1V0");
     case 11:
         return QStringLiteral("VDD_CORE_A0");
+//    case 12:
+//        return QStringLiteral("V3P3_J2");
     case 12:
-        return QStringLiteral("V3P3_J2");
-    case 13:
         return QStringLiteral("SYS_IO_1P8V");
-    case 14:
+    case 13:
         return QStringLiteral("板上温度");
-    case 15:
+    case 14:
         return QStringLiteral("J2温度");
-    case 16:
-        return QStringLiteral("J2温度墙");
-    case 17:
-        return QStringLiteral("J2工作状态");
-    case 18:
-        return QStringLiteral("限功率状态");
-    case 19:
+//    case 16:
+//        return QStringLiteral("J2温度墙");
+//    case 17:
+//        return QStringLiteral("J2工作状态");
+//    case 14:
+//        return QStringLiteral("限功率状态");
+    case 15:
         return QStringLiteral("CAN2");
-    case 20:
+    case 16:
         return QStringLiteral("CAN3");
-    case 21:
+    case 17:
         return QStringLiteral("CPU");
-    case 22:
+    case 18:
         return QStringLiteral("BPU");
+    default:
+        return QStringLiteral("");
     }
 }
 
@@ -174,3 +177,4 @@ QVariant EmcResultModel::getColorFromModel(int row, int column) const
     }
     return QColor(Qt::white);
 }
+

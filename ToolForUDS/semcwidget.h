@@ -47,6 +47,7 @@ protected:
 private slots:
     void on_btn_file_clicked();
     void slotTimeOut();
+    void slotProcess(uint signType, QVariant data);
 
 private:
     Ui::SEmcWidget *ui;

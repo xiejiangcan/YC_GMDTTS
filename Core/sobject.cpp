@@ -50,7 +50,7 @@ QReadWriteLock &SObject::lock()
     return m_lock;
 }
 
-bool SObject::setProperty(const char *name,
+bool SObject::setPropertyP(const char *name,
                           const QVariant &value,
                           const QObject *changedBy)
 {
@@ -79,9 +79,9 @@ bool SObject::setProperty(const char *name,
     return res;
 }
 
-bool SObject::setProperty(const QString &name, const QVariant &value, const QObject *changedBy)
+bool SObject::setPropertyP(const QString &name, const QVariant &value, const QObject *changedBy)
 {
-    return setProperty(name.toUtf8().data(), value, changedBy);
+    return setPropertyP(name.toUtf8().data(), value, changedBy);
 }
 
 void SObject::setPropertyS(const QString &name,
@@ -112,7 +112,7 @@ bool SObject::setPropertyEx(const QString &strPath,
             pChild->setObjectName(lstPath[nIndex]);
         }
     }
-    return pChild->setProperty(lstPath.last().toUtf8().data(),
+    return pChild->setPropertyP(lstPath.last().toUtf8().data(),
                                varValue, changedBy);
 }
 
@@ -121,7 +121,7 @@ void SObject::setPropertyByText(const QString &name,
                                 const QObject *changedBy)
 {
     QVariant tmpValue = stringToVariant(property(name.toUtf8().data()).typeName(), value);
-    setProperty(name.toUtf8().data(),
+    setPropertyP(name.toUtf8().data(),
                 tmpValue,
                 changedBy);
 }
@@ -494,7 +494,7 @@ void SObject::customEvent(QEvent *event)
         if(pEvt != NULL
                 && !pEvt->params().empty()){
             //qDebug() <<"obj:" << this<< "\tevt:" << pEvt->params().firstKey();
-            setProperty(pEvt->params()[STR_NAME].toString().toUtf8().data(), pEvt->params()[STR_VALUE],
+            setPropertyP(pEvt->params()[STR_NAME].toString().toUtf8().data(), pEvt->params()[STR_VALUE],
                     (QObject*)pEvt->params()[STR_CHANGEDBY].value<void*>());
         }
     }

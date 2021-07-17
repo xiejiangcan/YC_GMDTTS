@@ -45,17 +45,14 @@ SUsbCanWidget::SUsbCanWidget(SMainWindow *mainWindow, QWidget *parent)
 
     initWidget();
     registerDevice();
-    m_timer.start(50);
 
     connect(m_switchBtn, &QPushButton::clicked, this, &SUsbCanWidget::slotBtnClicked);
     connect(m_handle, &YCanHandle::signCanMessage,
             this, &SUsbCanWidget::slotCanMessage);
-    connect(&m_timer, &QTimer::timeout, this, &SUsbCanWidget::slotTimeout);
 }
 
 SUsbCanWidget::~SUsbCanWidget()
 {
-    m_timer.stop();
     if(m_thread.isRunning()){
         m_thread.stop();
         m_thread.wait();
@@ -222,16 +219,10 @@ int SUsbCanWidget::controlThread(void *pParam, const bool &bRunning)
 Q_DECLARE_METATYPE(CAN_MESSAGE_PACKAGE)
 void SUsbCanWidget::slotCanMessage(const CAN_MESSAGE_PACKAGE &buf)
 {
-    YCanHandle* handle = qobject_cast<YCanHandle*>(sender());
-    if(!handle){
-        return;
+    SObject* pBuff = this->sobject()->findChild<SObject*>(MSG_BUFF);
+    if(pBuff){
+        emit pBuff->signalNotifed(SIGNAL_CAN_MESSAGE, QVariant::fromValue(buf));
     }
-
-    if(m_dataList.size() > 20){
-        m_dataList.removeFirst();
-    }
-    m_dataList.append(buf);
-
 }
 
 void SUsbCanWidget::slotBtnClicked()
@@ -255,18 +246,6 @@ void SUsbCanWidget::slotBtnClicked()
     this->setProperty(CAN_CHANNEL, m_radioBtns[B_CHA1]->isChecked() ? 1 : 2);
     this->setProperty(CAN_BAUD, m_comboBox[C_BAUD]->currentIndex());
     sobject()->setPropertyEx(CAN_OPENSTATE, m_isOpen);
-}
-
-void SUsbCanWidget::slotTimeout()
-{
-    if(m_dataList.isEmpty())
-        return;
-    SObject* pBuff = this->sobject()->findChild<SObject*>(MSG_BUFF);
-    QString name = QString(RECEIVE_BUFF);
-    if(pBuff){
-        pBuff->setPropertyS(name.toLatin1().data(), QVariant::fromValue(m_dataList.takeFirst()));
-        //pBuff->setPropertyEx(name.toLatin1().data(), can2ByteArray(buf));
-    }
 }
 
 void SUsbCanWidget::setSObject(SObject *obj)

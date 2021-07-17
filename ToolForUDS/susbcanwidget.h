@@ -36,9 +36,8 @@ protected:
     static int controlThread(void *pParam, const bool &bRunning);
 
 public slots:
-    void slotCanMessage(const CAN_MESSAGE_PACKAGE& buf);
+    void slotCanMessage(const CAN_MESSAGE_PACKAGE &buf);
     void slotBtnClicked();
-    void slotTimeout();
 
 private:
     QGroupBox*      m_groupBox[G_LENGTH];
@@ -47,9 +46,6 @@ private:
     QPushButton*    m_switchBtn = nullptr;
     YCanHandle*     m_handle;
     QStringList     m_deviceList;
-    QTimer          m_timer;
-
-    QList<CAN_MESSAGE_PACKAGE>  m_dataList;
 
     bool                    m_isOpen = false;
 };
