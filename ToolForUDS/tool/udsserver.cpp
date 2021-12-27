@@ -58,7 +58,7 @@ void UdsServer::process(YCanHandle *handle)
         mOutTimer.start(mN_Bs);
     }else{
         CAN_OBJ obj;
-        obj.DataLen = nSize + 1;
+        obj.DataLen = 8;
         obj.ID = mSendCanID;
         int index = 1;
         obj.Data[0] = 0x00 + nSize;

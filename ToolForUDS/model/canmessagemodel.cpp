@@ -7,10 +7,11 @@ CanMessageModel::CanMessageModel(QObject *parent)
     mTimer.start(500);
     connect(&mTimer, &QTimer::timeout,
             this, [&](){
-        if(mFreshCount != 20){
-            mFreshCount = 20;
-            updateModel();
-        }
+//        if(mFreshCount != 20){
+//            mFreshCount = 20;
+//            updateModel();
+//        }
+        updateModel();
     });
 }
 
@@ -23,12 +24,12 @@ void CanMessageModel::insertData(CAN_OBJ data, QString type, QString devID)
     model.devID = devID;
     model.type = type;
     mModel.append(model);
-    if(mFreshCount != 0){
-        --mFreshCount;
-        return;
-    }
-    mFreshCount = 20;
-    updateModel();
+//    if(mFreshCount != 0){
+//        --mFreshCount;
+//        return;
+//    }
+//    mFreshCount = 20;
+//    updateModel();
 }
 
 Q_DECLARE_METATYPE(CAN_OBJ)

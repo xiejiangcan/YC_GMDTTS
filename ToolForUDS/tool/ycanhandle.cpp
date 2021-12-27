@@ -524,12 +524,14 @@ int YCanHandle::listenAllCan(void *pParam, const bool &bRunning)
 Q_DECLARE_METATYPE(CAN_OBJ)
 void YCanHandle::analysisBuf(int devInd, int devChan, const QVector<CAN_OBJ> &bufs)
 {
+    //QList<CAN_MESSAGE_PACKAGE> msgs;
     foreach(auto buf, bufs){
         CAN_MESSAGE_PACKAGE msg;
         msg.devInd = devInd;
         msg.devChan = devChan;
         msg.canObj = QVariant::fromValue(buf);
         emit signCanMessage(msg);
+        //msgs.append(msg);
     }
 }
 

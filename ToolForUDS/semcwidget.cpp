@@ -31,7 +31,8 @@ SEmcWidget::SEmcWidget(SMainWindow *mainWindow, QWidget *parent) :
     SWidget(mainWindow, parent),
     ui(new Ui::SEmcWidget),
     m_timer(new QTimer(this)),
-    m_timeOutFlag(true)
+    m_timeOutFlag(true),
+    m_saveCount(0)
 {
     ui->setupUi(this);
 
@@ -42,6 +43,8 @@ SEmcWidget::SEmcWidget(SMainWindow *mainWindow, QWidget *parent) :
 
 SEmcWidget::~SEmcWidget()
 {
+    if(mFileTool.IsOpen())
+        fileOperation(false);
     delete ui;
     if(m_thread.isRunning()){
         m_thread.stop();
@@ -67,6 +70,15 @@ void SEmcWidget::setSObject(SObject *obj)
     QString strDevChan = QString("DevChan: %1").arg(m_devChan);
     ui->LB_devInd->setText(strDevInd);
     ui->LB_devChan->setText(strDevChan);
+
+    if(isMapped(STR_DATASOURCE)){
+        QVariantMap ParamInfo = mapping()[STR_DATASOURCE];
+        SObject* signalObj =(SObject*)ParamInfo[STR_VALUE].value<void*>();
+        if(signalObj){
+            connect(signalObj, &SObject::signalNotifed,
+                    this, &SEmcWidget::slotProcess);
+        }
+    }
 }
 
 void SEmcWidget::propertyOfSObjectChanged(SObject *obj, const QString &strPropName, const SObject::PropertyT &propChangedBy)
@@ -100,7 +112,7 @@ void SEmcWidget::initSObject(SObject *obj)
     obj->setProperty(EMC_DEVCHAN, 0);
     addSpecialProperty(obj, STR_DATASOURCE, "buff.receive_buff", STR_ROLE_MAPPING);
     addSpecialProperty(obj, STR_SIGNALOUT, "can.can_openstate", STR_ROLE_MAPPING);
-    addSpecialProperty(obj, STR_RESULTOUT, "emcResult.emc_result", STR_ROLE_MAPPING);
+    addSpecialProperty(obj, STR_RESULTOUT, "emcResult.emc_result_", STR_ROLE_MAPPING);
 }
 
 QString SEmcWidget::LinkFailString()
@@ -113,7 +125,7 @@ QString SEmcWidget::LinkFailString()
 QString SEmcWidget::InitFileString()
 {
     QString result = QString("time\t");
-    result += QString("Index\t");
+    //result += QString("Index\t");
     result += QString("VBAT_P_F\t");
     result += QString("IGN\t");
     result += QString("CAN_WAKE_UP\t");
@@ -183,33 +195,33 @@ int SEmcWidget::controlThread(void *pParam, const bool &bRunning)
         uint signalVer = 0, dataVer = 0;
         QVariant data;
         while(bRunning){
-            if(pWidget->isMapped(STR_DATASOURCE))
-            {
-                ParamInfo = pWidget->mapping()[STR_DATASOURCE];
-                signalObj =(SObject*)ParamInfo[STR_VALUE].value<void*>();
-                if(signalObj != nullptr)
-                {
-                    signalProp = ParamInfo[STR_PROP].toString().toUtf8();
-                    if(!signalProp.isEmpty())
-                    {
-                        uVersion = signalObj->propertyInfo()[signalProp].m_version;
-                        if(uVersion != dataVer)
-                        {
-                            if(signalObj->lock().tryLockForRead())
-                            {
-                                data = signalObj->property(signalProp.data());
-                                signalObj->lock().unlock();
-                            }
-                            if(data.isValid() && !data.isNull())
-                            {
-                                CAN_MESSAGE_PACKAGE canObj = data.value<CAN_MESSAGE_PACKAGE>();
-                                dataVer = uVersion;
-                                pWidget->analysisData(canObj);
-                            }
-                        }
-                    }
-                }
-            }
+//            if(pWidget->isMapped(STR_DATASOURCE))
+//            {
+//                ParamInfo = pWidget->mapping()[STR_DATASOURCE];
+//                signalObj =(SObject*)ParamInfo[STR_VALUE].value<void*>();
+//                if(signalObj != nullptr)
+//                {
+//                    signalProp = ParamInfo[STR_PROP].toString().toUtf8();
+//                    if(!signalProp.isEmpty())
+//                    {
+//                        uVersion = signalObj->propertyInfo()[signalProp].m_version;
+//                        if(uVersion != dataVer)
+//                        {
+//                            if(signalObj->lock().tryLockForRead())
+//                            {
+//                                data = signalObj->property(signalProp.data());
+//                                signalObj->lock().unlock();
+//                            }
+//                            if(data.isValid() && !data.isNull())
+//                            {
+//                                CAN_MESSAGE_PACKAGE canObj = data.value<CAN_MESSAGE_PACKAGE>();
+//                                dataVer = uVersion;
+//                                pWidget->analysisData(canObj);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
 
             if(pWidget->isMapped(STR_SIGNALOUT))
             {
@@ -269,7 +281,7 @@ void SEmcWidget::analysisData(const CAN_OBJ &source)
         pLabel->setNum(value);
     }
 
-    if(isMapped(STR_RESULTOUT)){
+    if(m_tool.IsDataFull() && isMapped(STR_RESULTOUT)){
         auto mapResult = mapping()[STR_RESULTOUT];
         if(!mapResult.isEmpty()){
             SObject *resultObj = (SObject*)mapResult[STR_VALUE].value<void*>();
@@ -286,10 +298,16 @@ void SEmcWidget::analysisData(const CAN_OBJ &source)
     auto data = m_tool.GetData();
     if(m_saveFlag){
         if(!mFileTool.IsOpen()){
-            mFileTool.OpenFile(this->sobject()->objectName());
+            mFileTool.OpenFile(QDateTime::currentDateTime().toString(" yyyyMMdd-hhmmss_")
+                               + this->sobject()->objectName());
             mFileTool.WriteData(InitFileString());
         }
         mFileTool.WriteData(DataToString(data));
+        ++m_saveCount;
+        if(m_saveCount > 80000){
+            fileOperation(false);
+            m_saveCount = 0;
+        }
         m_saveFlag = false;
     }
 
@@ -306,7 +324,8 @@ void SEmcWidget::analysisData(const CAN_MESSAGE_PACKAGE &source)
 void SEmcWidget::fileOperation(bool open)
 {
     if(open){
-        mFileTool.OpenFile(this->sobject()->objectName());
+        mFileTool.OpenFile(QDateTime::currentDateTime().toString(" yyyyMMdd-hhmmss_")
+                           + this->sobject()->objectName());
         mFileTool.WriteData(InitFileString());
     }else{
         mFileTool.CloseFile();
@@ -315,8 +334,8 @@ void SEmcWidget::fileOperation(bool open)
             filepath = QApplication::applicationDirPath() + "/data";
         }
         QString devName = this->sobject()->objectName();
-        QString filename = devName
-                + QDateTime::currentDateTime().toString(" yyyyMMdd-hhmmss_")
+        QString filename = QDateTime::currentDateTime().toString(" yyyyMMdd-hhmmss_")
+                + devName
                 + QString(".tsf");
         if(!mFileTool.SaveFile(filepath + "/" + filename))
             qDebug() << "save file failed";
@@ -401,5 +420,14 @@ void SEmcWidget::slotTimeOut()
         m_changeFlag = false;
     }
     m_timeOutFlag = true;
+}
+
+void SEmcWidget::slotProcess(uint signType, QVariant data)
+{
+    if(signType != SIGNAL_CAN_MESSAGE)
+        return;
+    CAN_MESSAGE_PACKAGE canObj = data.value<CAN_MESSAGE_PACKAGE>();
+    canObj.type = QString("RXD");
+    analysisData(canObj);
 }
 

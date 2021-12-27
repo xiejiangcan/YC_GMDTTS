@@ -100,6 +100,19 @@ void SCanMessageWidgt::slotIsHexStateChanged(int state)
     m_model->updateModel();
 }
 
+void SCanMessageWidgt::slotProcess(uint signType, QVariant data)
+{
+    if(signType != SIGNAL_CAN_MESSAGE)
+        return;
+    CAN_MESSAGE_PACKAGE canObj = data.value<CAN_MESSAGE_PACKAGE>();
+    canObj.type = QString("RXD");
+    m_model->insertData(canObj);
+    if(m_checkBox[C_AUTO]->isChecked()){
+        emit signUpdateTable();
+    }
+    //m_canMsgList.append(data);
+}
+
 void SCanMessageWidgt::setSObject(SObject *obj)
 {
     SWidget::setSObject(obj);
@@ -108,6 +121,15 @@ void SCanMessageWidgt::setSObject(SObject *obj)
     m_model->setIsHex(obj->property(IS_HEX).toBool());
     m_proxyModel->setIsHex(obj->property(IS_HEX).toBool());
     m_checkBox[C_AUTO]->setChecked(obj->property(IS_AUTO).toBool());
+
+    if(isMapped(STR_DATASOURCE)){
+        QVariantMap ParamInfo = mapping()[STR_DATASOURCE];
+        SObject* signalObj =(SObject*)ParamInfo[STR_VALUE].value<void*>();
+        if(signalObj){
+            connect(signalObj, &SObject::signalNotifed,
+                    this, &SCanMessageWidgt::slotProcess);
+        }
+    }
 }
 
 void SCanMessageWidgt::propertyOfSObjectChanged(SObject *obj, const QString &strPropName,
@@ -151,36 +173,45 @@ int SCanMessageWidgt::controlThread(void *pParam, const bool &bRunning)
     if(pWidget){
         QVariantMap ParamInfo;
         SObject* signalObj = nullptr;
-        uint dataSourceVer = 0;
+        //uint dataSourceVer = 0;
         QVariant data;
         while(bRunning){
-            if(pWidget->isMapped(STR_DATASOURCE)){
-                ParamInfo = pWidget->mapping()[STR_DATASOURCE];
-                signalObj =(SObject*)ParamInfo[STR_VALUE].value<void*>();
-                if(signalObj != nullptr){
-                    QByteArray signalProp = ParamInfo[STR_PROP].toString().toUtf8();
-                    if(!signalProp.isEmpty()){
-                        QString propName = QString(signalProp);
-                        uint uVersion = signalObj->propertyInfo()[propName].m_version;
-                        if(uVersion != dataSourceVer){
-                            if(signalObj->lock().tryLockForRead()){
-                                auto propLst = signalObj->dynamicPropertyNames();
-                                data = signalObj->property(propName.toLatin1().data());
-                                signalObj->lock().unlock();
-                            }
-                            if(data.isValid() && !data.isNull()){
-                                CAN_MESSAGE_PACKAGE canObj = data.value<CAN_MESSAGE_PACKAGE>();
-                                dataSourceVer = uVersion;
-                                canObj.type = QString("RXD");
-                                pWidget->m_model->insertData(canObj);
-                            }
-                            if(pWidget->m_checkBox[C_AUTO]->isChecked()){
-                                emit pWidget->signUpdateTable();
-                            }
-                        }
-                    }
-                }
-            }
+//            while(pWidget->m_canMsgList.size() > 2){
+//                QVariant data = pWidget->m_canMsgList.takeFirst();
+//                CAN_MESSAGE_PACKAGE canObj = data.value<CAN_MESSAGE_PACKAGE>();
+//                canObj.type = QString("RXD");
+//                pWidget->m_model->insertData(canObj);
+//            }
+//            if(pWidget->m_checkBox[C_AUTO]->isChecked()){
+//                emit pWidget->signUpdateTable();
+//            }
+            //            if(pWidget->isMapped(STR_DATASOURCE)){
+            //                ParamInfo = pWidget->mapping()[STR_DATASOURCE];
+            //                signalObj =(SObject*)ParamInfo[STR_VALUE].value<void*>();
+            //                if(signalObj != nullptr){
+            //                    QByteArray signalProp = ParamInfo[STR_PROP].toString().toUtf8();
+            //                    if(!signalProp.isEmpty()){
+            //                        QString propName = QString(signalProp);
+            //                        uint uVersion = signalObj->propertyInfo()[propName].m_version;
+            //                        if(uVersion != dataSourceVer){
+            //                            if(signalObj->lock().tryLockForRead()){
+            //                                auto propLst = signalObj->dynamicPropertyNames();
+            //                                data = signalObj->property(propName.toLatin1().data());
+            //                                signalObj->lock().unlock();
+            //                            }
+            //                            if(data.isValid() && !data.isNull()){
+            //                                CAN_MESSAGE_PACKAGE canObj = data.value<CAN_MESSAGE_PACKAGE>();
+            //                                dataSourceVer = uVersion;
+            //                                canObj.type = QString("RXD");
+            //                                pWidget->m_model->insertData(canObj);
+            //                            }
+            //                            if(pWidget->m_checkBox[C_AUTO]->isChecked()){
+            //                                emit pWidget->signUpdateTable();
+            //                            }
+            //                        }
+            //                    }
+            //                }
+            //            }
 
             if(pWidget->isMapped(STR_SENDSOURCE)){
                 ParamInfo = pWidget->mapping()[STR_SENDSOURCE];

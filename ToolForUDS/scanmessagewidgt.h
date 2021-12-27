@@ -37,6 +37,7 @@ signals:
 protected slots:
     void slotFilterTable();
     void slotIsHexStateChanged(int state);
+    void slotProcess(uint signType, QVariant data);
 
 private:
     QTableView*             m_table = nullptr;
@@ -49,6 +50,7 @@ private:
     CanMessageProxyModel*   m_proxyModel = nullptr;
 
     QVector<uint>       m_versions;
+    QList<QVariant>  m_canMsgList;
 
 };
 

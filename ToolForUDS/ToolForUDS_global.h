@@ -66,7 +66,8 @@
 #define EMC_DATAFREQ        "emc_dataFreq"
 #define EMC_DEVIND          "emc_devind"
 #define EMC_DEVCHAN         "emc_devchan"
-#define EMC_RESULT          "emc_result"
+#define EMC_RESULT          "emc_result_"
+#define EMC_RESULTNUM       "emc_resultNum"
 
 
 #endif // TOOLFORUDS_GLOBAL_H

@@ -1,15 +1,21 @@
 ﻿#include "emcresultmodel.h"
 #include <QColor>
+#include <QTime>
 
 EmcResultModel::EmcResultModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
+    m_timer.start(1000);
+    connect(&m_timer, &QTimer::timeout, this, &EmcResultModel::slotTimeout);
 }
 
 void EmcResultModel::updateModel(const QString &name, const QMap<QString, QVariantMap> &map)
 {
     if(m_timeoutList.contains(name)){
         m_timeoutList.removeOne(name);
+    }
+    if(!m_model.contains(name)){
+        m_timeMaskMap[name] = 0;
     }
     beginResetModel();
     m_model[name] = map;
@@ -59,7 +65,7 @@ int EmcResultModel::columnCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return 23;
+    return 20;
 }
 
 QVariant EmcResultModel::data(const QModelIndex &index, int role) const
@@ -69,62 +75,80 @@ QVariant EmcResultModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case Qt::DisplayRole:
-        return getValueFromModel(index.row(), index.column()).toDouble();
+        return getValueFromModel(index.row(), index.column());
     case Qt::BackgroundColorRole:
         return getColorFromModel(index.row(), index.column());
     }
     return QVariant();
 }
 
+QString EmcResultModel::formateFromSecond(uint second)
+{
+    uint temp, day, hour, min, sec;
+    day = second/(24*60*60);
+    temp = second%(24*60*60);
+    hour = temp/(60*60);
+    temp = temp%(60*60);
+    min = temp/60;
+    sec = temp%60;
+
+    return QString("%1-%2-%3-%4")
+            .arg(day,2).arg(hour,2).arg(min,2).arg(sec,2);
+}
+
 QVariant EmcResultModel::hHeaderInfo(int section) const
 {
     switch (section) {
     case 0:
-        return QStringLiteral("电源");
+        return QStringLiteral("计时器");
     case 1:
-        return QStringLiteral("KEYON唤醒源");
+        return QStringLiteral("电源");
     case 2:
-        return QStringLiteral("CAN唤醒源");
+        return QStringLiteral("KEYON唤醒源");
     case 3:
-        return QStringLiteral("ETH_V3P3");
+        return QStringLiteral("CAN唤醒源");
     case 4:
-        return QStringLiteral("V3P3_UP");
+        return QStringLiteral("ETH_V3P3");
     case 5:
-        return QStringLiteral("VDD_1V25");
+        return QStringLiteral("V3P3_UP");
     case 6:
-        return QStringLiteral("VDD_CNN_0V9");
+        return QStringLiteral("VDD_1V25");
     case 7:
-        return QStringLiteral("VDD_0V9");
+        return QStringLiteral("VDD_CNN_0V9");
     case 8:
-        return QStringLiteral("VDDQ_DDR_1V1");
+        return QStringLiteral("VDD_0V9");
     case 9:
-        return QStringLiteral("VDDA_1V8");
+        return QStringLiteral("VDDQ_DDR_1V1");
     case 10:
-        return QStringLiteral("VDD_DDR_1V0");
+        return QStringLiteral("VDDA_1V8");
     case 11:
-        return QStringLiteral("VDD_CORE_A0");
+        return QStringLiteral("VDD_DDR_1V0");
     case 12:
-        return QStringLiteral("V3P3_J2");
+        return QStringLiteral("VDD_CORE_A0");
+//    case 12:
+//        return QStringLiteral("V3P3_J2");
     case 13:
         return QStringLiteral("SYS_IO_1P8V");
     case 14:
         return QStringLiteral("板上温度");
     case 15:
         return QStringLiteral("J2温度");
+//    case 16:
+//        return QStringLiteral("J2温度墙");
+//    case 17:
+//        return QStringLiteral("J2工作状态");
+//    case 14:
+//        return QStringLiteral("限功率状态");
     case 16:
-        return QStringLiteral("J2温度墙");
-    case 17:
-        return QStringLiteral("J2工作状态");
-    case 18:
-        return QStringLiteral("限功率状态");
-    case 19:
         return QStringLiteral("CAN2");
-    case 20:
+    case 17:
         return QStringLiteral("CAN3");
-    case 21:
+    case 18:
         return QStringLiteral("CPU");
-    case 22:
+    case 19:
         return QStringLiteral("BPU");
+    default:
+        return QStringLiteral("");
     }
 }
 
@@ -153,6 +177,11 @@ QVariant EmcResultModel::vHeaderColor(int section) const
 QVariant EmcResultModel::getValueFromModel(int row, int column) const
 {
     QString key = vHeaderInfo(row).toString();
+    if(column == 0){
+        uint second = m_timeMaskMap[key].toUInt();
+        QString res = formateFromSecond(second);
+        return res;
+    }
     QString prop = hHeaderInfo(column).toString();
     if(m_model.contains(key)
             && m_model[key].contains(prop)
@@ -163,6 +192,8 @@ QVariant EmcResultModel::getValueFromModel(int row, int column) const
 
 QVariant EmcResultModel::getColorFromModel(int row, int column) const
 {
+    if(column == 0)
+        return QColor(Qt::white);
     QString key = vHeaderInfo(row).toString();
     QString prop = hHeaderInfo(column).toString();
     if(m_model.contains(key)
@@ -174,3 +205,17 @@ QVariant EmcResultModel::getColorFromModel(int row, int column) const
     }
     return QColor(Qt::white);
 }
+
+void EmcResultModel::slotTimeout()
+{
+    auto begin = m_timeMaskMap.begin();
+    auto end = m_timeMaskMap.end();
+    while(begin != end){
+        int time = begin.value().toInt() + 1;
+        (*begin).setValue(time);
+        ++begin;
+    }
+    beginResetModel();
+    endResetModel();
+}
+

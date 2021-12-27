@@ -42,17 +42,17 @@ void SEmcTableWidget::propertyOfSObjectChanged(SObject *obj, const QString &strP
     Q_UNUSED(obj)
     Q_UNUSED(strPropName)
     Q_UNUSED(propChangedBy)
-    //    QObject::blockSignals(true);
-    //    if(strPropName == STR_SIGNALOUT){
-    //        auto& mapMapping = mapping();
-    //        if(mapMapping.contains(STR_SIGNALOUT)
-    //                && mapMapping[STR_SIGNALOUT][STR_TYPE].toString() == STR_PROP){
-    //            m_thread.setUserFunction(controlThread);
-    //            m_thread.setUserParam(this);
-    //            m_thread.start();
+    //        QObject::blockSignals(true);
+    //        if(strPropName == STR_SIGNALOUT){
+    //            auto& mapMapping = mapping();
+    //            if(mapMapping.contains(STR_SIGNALOUT)
+    //                    && mapMapping[STR_SIGNALOUT][STR_TYPE].toString() == STR_PROP){
+    //                m_thread.setUserFunction(controlThread);
+    //                m_thread.setUserParam(this);
+    //                m_thread.start();
+    //            }
     //        }
-    //    }
-    //    QObject::blockSignals(false);
+    //        QObject::blockSignals(false);
 }
 
 QString SEmcTableWidget::keyString()
@@ -63,7 +63,7 @@ QString SEmcTableWidget::keyString()
 void SEmcTableWidget::initSObject(SObject *obj)
 {
     obj->setObjectName(EMC_TABLE);
-    obj->setProperty(EMC_RESULT, STR_DEFAULT);
+    obj->setProperty(EMC_RESULTNUM, 6);
     obj->setProperty(STR_ID, "emcResult");
 }
 
@@ -71,27 +71,34 @@ int SEmcTableWidget::controlThread(void *pParam, const bool &bRunning)
 {
     SEmcTableWidget* pWidget = (SEmcTableWidget*)pParam;
     if(pWidget){
-        uint uVersion = 0;
+        QVector<uint> uVersion;
+        QString propName;
         QString resultMap;
         while(bRunning){
             SObject* pObjBuff = pWidget->sobject();
             if(pObjBuff){
-                if(pObjBuff->propertyInfo().contains(EMC_RESULT)){
-                    uint tempVersion = pObjBuff->propertyInfo()[EMC_RESULT].m_version;
-                    if(uVersion != tempVersion){
-                        pObjBuff->lock().lockForRead();
-                        resultMap =
-                                pObjBuff->property(EMC_RESULT).toString();
-                        pObjBuff->lock().unlock();
-                        if(!resultMap.isEmpty()){
-                            uVersion = tempVersion;
-                            emit pWidget->signalUpdateTable(resultMap);
+                int resultNum = pObjBuff->property(EMC_RESULTNUM).toInt();
+                while(uVersion.size() != resultNum){
+                    if(uVersion.size()> resultNum)
+                        uVersion.removeLast();
+                    else
+                        uVersion.append(0);
+                }
+
+                for(int i = 0; i < uVersion.size(); ++i){
+                    propName = QString(EMC_RESULT) + QString::number(i);
+                    if(pObjBuff->propertyInfo().contains(propName)){
+                        uint tempVersion = pObjBuff->propertyInfo()[propName].m_version;
+                        if(uVersion[i] != tempVersion){
+                            uVersion[i] = tempVersion;
+                            resultMap = pObjBuff->property(propName.toLatin1()).toString();
+                            if(!resultMap.isEmpty())
+                                emit pWidget->signalUpdateTable(resultMap);
                         }
                     }
-
                 }
             }
-            QThread::msleep(1);
+            QThread::msleep(100);
         }
     }
     return 0;
@@ -134,4 +141,5 @@ void SEmcTableWidget::slotUpdateTable(QString str)
     }
 
     m_model->updateModel(signalName, result);
+
 }
