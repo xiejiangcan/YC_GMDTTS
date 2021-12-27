@@ -1,14 +1,23 @@
 ﻿#include "yfileoperation.h"
 #include <QFileInfo>
 #include <QDir>
-#include <QCoreApplication>
+#include <QDebug>
+#include <QApplication>
+#include <QStandardPaths>
 
-const QString _tmpFilePath = QCoreApplication::applicationDirPath() + "/data/";
+//const QString _tmpFilePath = QCoreApplication::applicationDirPath() + "/data/";
+const QString _tmpFilePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation)
+        + "/EMC/";
 
 YFileOperation::YFileOperation(QObject *parent)
     : QObject(parent)
 {
-
+    if(isDirExist(_tmpFilePath)){
+        qDebug() << _tmpFilePath;
+    }
+    if(isDirExist(QApplication::applicationDirPath() + "/data/")){
+        qDebug() << QApplication::applicationDirPath() + "/data/";
+    }
 }
 
 YFileOperation::~YFileOperation()
@@ -61,7 +70,7 @@ bool YFileOperation::isDirExist(QString fullPath)
     if(dir.exists())
         return true;
     else
-        return dir.mkdir(fullPath);
+        return dir.mkpath(fullPath);
 }
 
 QString YFileOperation::isFileExist(QString fullPath)

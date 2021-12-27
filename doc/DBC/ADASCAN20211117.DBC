@@ -1,0 +1,1027 @@
+VERSION "EVCAN"
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: MPC APA GW MRR
+
+
+BO_ 1659 VCU_EVCAN_F08: 8 GW
+ SG_ DriveModeSwch : 55|2@0+ (1,0) [0|3] ""  MPC
+
+BO_ 125 SRS_CrashInfo: 8 GW
+ SG_ OccupantDetDRVSideSRS : 18|1@0+ (1,0) [0|1] ""  MPC
+ SG_ OccupantDetDRVSideVd : 20|1@0+ (1,0) [0|1] ""  MPC
+
+BO_ 675 EPS_StrSysSt: 8 GW
+ SG_ EPSFailure : 0|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ CCAN_1A3_flag2A3 : 1|1@0+ (1,0) [0|1] ""  MPC
+ SG_ TorsionBarTorqueDir : 6|1@0+ (1,0) [0|1] ""  MPC
+ SG_ TosionBarTorqueValid : 7|1@0+ (1,0) [0|1] ""  MPC
+ SG_ TorsionBarTorque : 39|10@0+ (0.01,0) [0|10] ""  MPC
+ SG_ EPSLKSCtrlStatus : 54|3@0+ (1,0) [0|5] ""  MPC
+ SG_ EPS_StrSysStCounter : 51|4@0+ (1,0) [0|15] ""  MPC
+ SG_ EPS_StrSysStCheckSum : 63|8@0+ (1,0) [0|255] ""  MPC
+ SG_ EPS_APAControlSts : 26|3@0+ (1,0) [0|7] ""  APA
+ SG_ EPS_APAControlFaultSts : 30|4@0+ (1,0) [0|15] ""  APA
+
+BO_ 309 EPS_SASAngle: 8 GW
+ SG_ EPS_SASChecksum : 7|8@0+ (1,0) [0|255] ""  MPC,APA
+ SG_ EPS_SASMsgCounter : 11|4@0+ (1,0) [0|15] ""  MPC,APA
+ SG_ SAS_FailureSts : 12|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ SAS_CalibrationSts : 13|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ SAS_TrimmingStatus : 15|1@0+ (1,0) [0|1] ""  MPC
+ SG_ SteeringWheelAngle : 23|16@0+ (0.1,-738) [-738|738] ""  MPC,APA
+ SG_ SAS_SteerWheelRotSpd : 39|8@0+ (4,0) [0|1016] ""  MPC,APA
+ SG_ SAS_SteerWheelRotDir : 40|1@0+ (1,0) [0|1] ""  MPC,APA
+
+BO_ 565 GVCU_EVCAN_F00: 8 GW
+ SG_ BrkPedVd : 50|1@0+ (1,0) [0|1] ""  MPC
+ SG_ BrkPedSts : 63|2@0+ (1,0) [0|3] ""  MPC
+
+BO_ 681 EPB_CCAN_F00: 8 GW
+ SG_ EPBSys : 22|3@0+ (1,0) [0|5] ""  MPC
+ SG_ FailureLampSts : 33|2@0+ (1,0) [0|3] ""  MPC
+ SG_ EPBSWSts : 35|2@0+ (1,0) [0|3] ""  MPC
+
+BO_ 273 VCU_EVCAN_F20: 8 GW
+ SG_ VCUGearLevPos : 55|4@0+ (1,0) [0|14] ""  MPC
+
+BO_ 271 mrEMS_EngSt3: 8 GW
+ SG_ GasPdlPsnExVd : 37|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ GasPdlPsnEx : 55|12@0+ (0.0275,0) [0|99.99] ""  MPC,APA
+ SG_ EVCAN_111_flag10F : 0|1@0+ (1,0) [0|1] ""  MPC
+ SG_ EVCAN_668_flag10F : 1|1@0+ (1,0) [0|1] ""  MPC
+
+BO_ 1640 VCU_EVCAN_F07: 8 GW
+ SG_ HVBSOCVCU : 63|8@0+ (0.5,0) [0|100] ""  MPC
+
+BO_ 530 PCU_EVCAN_F00: 8 GW
+ SG_ TMSpd : 47|16@0+ (0.25,0) [0|16063.75] ""  MPC
+ SG_ TMTrq : 9|10@0+ (1,0) [0|1023] ""  MPC
+
+BO_ 614 VCU_ADAS_F01: 8 GW
+ SG_ VCU_ADASF01CheckSum : 7|8@0+ (1,0) [0|255] ""  MPC
+ SG_ VCU_ADASF01Counter : 11|4@0+ (1,0) [0|15] ""  MPC
+ SG_ VCU_PowerControlResponse : 17|1@0+ (1,0) [0|1] ""  MPC
+ SG_ VCU_DriverDemandTorque : 31|16@0+ (1,0) [0|1023] ""  MPC
+ SG_ CurrentGear : 15|4@0+ (1,0) [0|15] ""  MPC,APA
+ SG_ CurrentGearVd : 16|1@0+ (1,0) [0|1] ""  MPC
+ SG_ EgdGearDsp : 51|4@0+ (1,0) [0|15] ""  MPC
+ SG_ GearPsn : 47|4@0+ (1,0) [0|15] ""  MPC,APA
+ SG_ GasPdlPsnVdVCU : 20|1@0+ (1,0) [0|1] ""  MPC
+ SG_ EmModeFlag : 18|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ECGPOvrd : 19|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ACM_LeverIntervention : 23|1@0+ (1,0) [0|1] ""  APA
+
+BO_ 339 VCU_ACC: 8 GW
+ SG_ VLCFailure : 19|1@0+ (1,0) [0|1] ""  MPC
+ SG_ CDDActiveVehHold : 27|1@0+ (1,0) [0|1] ""  MPC
+ SG_ VLC_InternalTargetAcceleration : 26|11@0+ (0.005,-7.22) [-7.22|3.015] ""  MPC
+ SG_ AutoHoldActive : 42|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ARPactive : 44|1@0+ (1,0) [0|1] ""  MPC
+ SG_ HBBActive : 45|1@0+ (1,0) [0|1] ""  MPC
+ SG_ VLCActive : 46|1@0+ (1,0) [0|1] ""  MPC
+ SG_ VLCAvailable : 47|1@0+ (1,0) [0|1] ""  MPC
+ SG_ VCU_ACCCnt : 3|4@0+ (1,0) [0|15] ""  MPC
+ SG_ VCU_ACCCsm : 63|8@0+ (1,0) [0|255] ""  MPC
+ SG_ ACCEnableSwitch : 48|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ACCEnableSwitchVd : 49|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ACCSetMinus : 50|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ACCSetMinusVd : 51|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ACCResumePlus : 52|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ACCResumePlusVd : 53|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ACCDeactivate : 54|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ACCDeactivateVd : 55|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ACCSwitch1 : 30|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ACCSwitch1Vd : 31|1@0+ (1,0) [0|1] ""  MPC
+ SG_ MenuResp_Error : 6|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ACCPassiveSts : 7|1@0+ (1,0) [0|1] ""  MPC
+ SG_ CDD_available : 41|1@0+ (1,0) [0|1] ""  MPC
+ SG_ CDD_active : 40|1@0+ (1,0) [0|1] ""  MPC
+
+BO_ 673 NBS_CCAN_F00: 8 GW
+ SG_ ABA_active : 0|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ABA_available : 1|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ABP_active : 2|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ABP_available : 3|1@0+ (1,0) [0|1] ""  MPC
+ SG_ AEB_active : 4|1@0+ (1,0) [0|1] ""  MPC
+ SG_ AEB_available : 5|1@0+ (1,0) [0|1] ""  MPC
+ SG_ AWB_active : 6|1@0+ (1,0) [0|1] ""  MPC
+ SG_ AWB_available : 7|1@0+ (1,0) [0|1] ""  MPC
+ SG_ EBS_BrkPelPosActVD : 36|1@0+ (1,0) [0|1] ""  MPC
+ SG_ EBS_BrkPelPosAct : 17|10@0+ (0.1,0) [0|100] ""  MPC
+
+BO_ 674 NBS_CDD: 8 GW
+ SG_ CDDActive : 8|1@0+ (1,0) [0|1] ""  MPC
+ SG_ CDDAvailable : 9|1@0+ (1,0) [0|1] ""  MPC
+
+BO_ 430 ESC_ADAS_F01: 8 GW
+ SG_ ESCCheckSum1 : 7|8@0+ (1,0) [0|255] ""  MPC,APA
+ SG_ ESCCounter1 : 15|4@0+ (1,0) [0|15] ""  MPC,APA
+ SG_ ABSItvInProgress : 8|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ VDCItvInProgress : 9|1@0+ (1,0) [0|1] ""  MPC
+ SG_ TCSItvInProgress : 10|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ NoBrakeForce : 36|1@0+ (1,0) [0|1] ""  MPC
+ SG_ BrkPrsOffsetVd : 49|1@0+ (1,0) [0|1] ""  APA
+ SG_ BrkPrsOffset : 48|9@0+ (0.1,-15) [-15|25] ""  APA
+ SG_ CCAN_32A_flag1AE : 50|1@0+ (1,0) [0|1] ""  MPC
+ SG_ CCAN_1AE_flag1AE : 51|1@0+ (1,0) [0|1] ""  MPC
+
+BO_ 517 ESC_CCAN_F02: 8 GW
+ SG_ BrakeDiscTempHigh : 23|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ESCSw : 21|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ESCSwVd : 22|1@0+ (1,0) [0|1] ""  MPC
+ SG_ BrkPrsVd : 51|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ BrkPrs : 50|11@0+ (0.1,0) [0|190] ""  MPC,APA
+ SG_ LongAccVd : 18|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ LongAcc : 17|10@0+ (0.01,-1.27) [-1.27|1.27] ""  MPC,APA
+ SG_ EBDFailure : 33|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ ABSFailure : 34|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ VDCFailure : 32|1@0+ (1,0) [0|1] ""  MPC
+ SG_ TCSFailure : 35|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ESCCsm_205 : 47|8@0+ (1,0) [0|255] ""  MPC,APA
+ SG_ ESC_BrakeSt2Counter : 55|4@0+ (1,0) [0|15] ""  MPC,APA
+
+BO_ 518 ESC_CCAN_F06: 8 GW
+ SG_ YawRateOffset : 7|16@0+ (0.01,-180) [-180|180] ""  MPC
+ SG_ YawRateOffsetVd : 54|1@0+ (1,0) [0|1] ""  MPC
+
+BO_ 543 ESC_CCAN_F05: 8 GW
+ SG_ mrESC_XYOffsetCounter : 15|4@0+ (1,0) [0|15] ""  MPC,APA
+ SG_ mrESC_XYOffsetCheckSum : 7|8@0+ (1,0) [0|255] ""  MPC,APA
+ SG_ YawRate : 23|16@0+ (0.01,0) [-100|100] ""  MPC,APA
+ SG_ YawRateVd : 8|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ CCAN_205_flag21F : 9|1@0+ (1,0) [0|1] ""  MPC
+ SG_ CCAN_21F_flag21F : 11|1@0+ (1,0) [0|1] ""  MPC
+ SG_ LatAcc : 55|10@0+ (0.01,-1.27) [-1.27|1.27] ""  MPC,APA
+ SG_ LatAccVd : 10|1@0+ (1,0) [0|1] ""  MPC,APA
+
+BO_ 1303 ICM_VehSt: 8 GW
+ SG_ OdometerInfoVd : 8|1@0+ (1,0) [0|1] ""  MPC
+ SG_ OdometerInfo : 47|24@0+ (1,0) [0|999999] ""  MPC
+
+BO_ 1304 ICM_VehSt1: 8 GW
+ SG_ DISFail : 27|1@0+ (1,0) [0|1] ""  MPC
+ SG_ QDashACCFail : 26|2@0+ (1,0) [0|3] ""  MPC
+ SG_ DispVehSpd : 24|9@0+ (1,0) [0|300] ""  MPC
+
+BO_ 1408 mrHU_GPSTime: 8 GW
+ SG_ GPSTimeYear : 7|12@0+ (1,0) [0|4095] ""  MPC
+ SG_ GPSTimeMonth : 11|4@0+ (1,0) [0|15] ""  MPC
+ SG_ GPSTimeDay : 20|5@0+ (1,0) [0|31] ""  MPC
+ SG_ GPSTimeHour : 28|5@0+ (1,0) [0|31] ""  MPC
+ SG_ GPSTimeMinute : 37|6@0+ (1,0) [0|59] ""  MPC
+ SG_ GPSTimeSecond : 45|6@0+ (1,0) [0|59] ""  MPC
+ SG_ GPSTimeStatus : 47|2@0+ (1,0) [0|3] ""  MPC
+
+BO_ 1301 HU_ADASSet: 8 GW
+ SG_ SteeringModeSet : 9|2@0+ (1,0) [0|3] ""  MPC
+ SG_ CCAN_1A3_flag515 : 10|1@0+ (1,0) [0|1] ""  MPC
+ SG_ BCAN_583_flag515 : 11|1@0+ (1,0) [0|1] ""  MPC
+ SG_ BCAN_587_flag515 : 15|1@0+ (1,0) [0|1] ""  MPC
+ SG_ SLASwitch : 12|1@0+ (1,0) [0|1] ""  MPC
+ SG_ LKA_LDW_SWSet : 47|2@0+ (1,0) [0|3] ""  MPC
+ SG_ FCWSet : 13|1@0+ (1,0) [0|1] ""  MPC
+ SG_ AEBSet : 14|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ADASSensitivitySet : 17|2@0+ (1,0) [0|3] ""  MPC
+ SG_ HMASwitchSet : 18|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ADAS_ModeSet : 19|1@0+ (1,0) [0|1] ""  MPC
+ SG_ NavSpeedLimitStatus : 23|2@0+ (1,0) [0|3] ""  MPC
+ SG_ NavCountryCode : 31|8@0+ (1,0) [0|255] ""  MPC
+ SG_ NavCurrRoadType : 43|4@0+ (1,0) [0|15] ""  MPC
+ SG_ FCWSensiSet : 45|2@0+ (1,0) [0|3] ""  MPC
+
+BO_ 608 MPC_SysSt: 8 MPC
+ SG_ HMA_Status : 2|3@0+ (1,0) [0|7] ""  GW
+ SG_ HMA_HighbeamReq : 3|1@0+ (1,0) [0|1] ""  GW
+ SG_ ADAS_LeftTrackingStatus : 5|2@0+ (1,0) [0|3] ""  GW
+ SG_ ADAS_RightTrackingStatus : 7|2@0+ (1,0) [0|3] ""  GW
+ SG_ LDW_Status : 10|3@0+ (1,0) [0|7] ""  GW
+ SG_ ADAS_Sensitivity : 12|2@0+ (1,0) [0|3] ""  GW
+ SG_ LKA_Status : 14|2@0+ (1,0) [0|3] ""  GW
+ SG_ ADAS_TakeoverReq : 15|1@0+ (1,0) [0|1] ""  GW
+ SG_ ADAS_Status : 18|3@0+ (1,0) [0|7] ""  GW
+ SG_ ADAS_WarningVibration : 19|1@0+ (1,0) [0|1] ""  GW
+ SG_ ADAS_WarningAudio : 20|1@0+ (1,0) [0|1] ""  GW
+ SG_ SLAState : 23|3@0+ (1,0) [0|7] ""  GW
+ SG_ SLASpdlimit : 32|6@0+ (1,0) [0|63] ""  GW
+ SG_ ADAS_TorqueReqStatus : 29|2@0+ (1,0) [0|3] ""  GW
+ SG_ ADAS_TorqueReq : 42|11@0+ (0.02,-20.48) [-20.48|20.46] ""  GW
+ SG_ MPC_AliveCounter : 27|4@0+ (1,0) [0|15] ""  GW
+ SG_ MPC_CheckSum : 63|8@0+ (1,0) [0|255] ""  GW
+ SG_ UpgradeAvaMPC : 31|2@0+ (1,0) [0|3] ""  GW
+
+BO_ 912 MRR_SysStHMI: 8 MPC
+ SG_ UpgradeAvaMRR : 39|2@0+ (1,0) [0|3] ""  GW
+ SG_ DxTarObj : 9|2@0+ (1,0) [0|3] ""  GW
+ SG_ TauGapSet : 11|2@0+ (1,0) [0|3] ""  GW
+ SG_ ObjValid : 12|1@0+ (1,0) [0|1] ""  GW
+ SG_ TakeOverReq : 13|1@0+ (1,0) [0|1] ""  GW
+ SG_ ACCSetCruVehSpdDis : 7|9@0+ (0.5,0) [0|255.5] ""  GW
+ SG_ Textinfo : 19|4@0+ (1,0) [0|15] ""  GW
+ SG_ ACC_SysStHMI_AliveCounter : 23|4@0+ (1,0) [0|15] ""  GW
+ SG_ ACCMode_HMI : 26|3@0+ (1,0) [0|7] ""  GW
+ SG_ PCW_latentWarning : 27|1@0+ (1,0) [0|1] ""  GW
+ SG_ PCW_preWarning : 28|1@0+ (1,0) [0|1] ""  GW
+ SG_ FRS_FCW_Switch : 29|1@0+ (1,0) [0|1] ""  GW
+ SG_ FRS_AEB_Switch : 30|1@0+ (1,0) [0|1] ""  GW
+ SG_ FRS_AEB_Status : 31|1@0+ (1,0) [0|1] ""  GW
+ SG_ FRS_FCW_status : 32|1@0+ (1,0) [0|1] ""  GW
+ SG_ FRS_AEB_status_testinfo : 34|2@0+ (1,0) [0|3] ""  GW
+ SG_ MRR_FCWSensitivity : 36|2@0+ (1,0) [0|3] ""  GW
+ SG_ ACC_SysStHMI_CheckSum : 63|8@0+ (1,0) [0|255] ""  GW
+
+BO_ 320 MRR_SysSt: 8 MPC
+ SG_ AccAxTarAim : 7|11@0+ (0.005,-7.22) [-7.22|3.015] ""  GW
+ SG_ AccAxTarUpperComfBand : 12|7@0+ (0.025,0) [0|3.125] ""  GW
+ SG_ AccAxTarLowerComfBand : 21|7@0+ (0.025,0) [0|3.125] ""  GW
+ SG_ AccdAxTarUpperLimit : 30|7@0+ (0.1,0) [0|12.7] ""  GW
+ SG_ AccdAxTarLowerLimit : 38|7@0+ (0.1,-12.7) [-12.7|0] ""  GW
+ SG_ ShutdownMode : 41|2@0+ (1,0) [0|3] ""  GW
+ SG_ ACCMode_ESP : 44|3@0+ (1,0) [0|7] ""  GW
+ SG_ BrakePreferred : 45|1@0+ (1,0) [0|1] ""  GW
+ SG_ ACC_Minimum_Braking : 46|1@0+ (1,0) [0|1] ""  GW
+ SG_ DriveOff : 47|1@0+ (1,0) [0|1] ""  GW
+ SG_ DecToStop : 48|1@0+ (1,0) [0|1] ""  GW
+ SG_ ACC_AliveCounter : 55|4@0+ (1,0) [0|15] ""  GW
+ SG_ ACC_ChkSum : 63|8@0+ (1,0) [0|255] ""  GW
+
+BO_ 323 MRR_PSSSysSt: 8 MPC
+ SG_ AEBDecCtrlRequest : 16|1@0+ (1,0) [0|1] ""  GW
+ SG_ CollisionMitigationDecCtrlReq : 17|1@0+ (1,0) [0|1] ""  GW
+ SG_ DecelerationSupportDecCtrlReq : 18|1@0+ (1,0) [0|1] ""  GW
+ SG_ PEDPDecCtrlRequest : 19|1@0+ (1,0) [0|1] ""  GW
+ SG_ ABALevel : 21|2@0+ (1,0) [0|3] ""  GW
+ SG_ ABARequest : 22|1@0+ (1,0) [0|1] ""  GW
+ SG_ AEBaxTar : 7|17@0+ (0.000488,-16) [-16|16] ""  GW
+ SG_ AWBLevel : 27|4@0+ (1,0) [0|15] ""  GW
+ SG_ AWBRequest : 28|1@0+ (1,0) [0|1] ""  GW
+ SG_ PrefillRequest : 29|1@0+ (1,0) [0|1] ""  GW
+ SG_ ACC_PSSSysSt_AliveCounter : 51|4@0+ (1,0) [0|15] ""  GW
+ SG_ ACC_PSSSysSt_ChkSum : 63|8@0+ (1,0) [0|255] ""  GW
+
+BO_ 670 APA_ESCSysSt: 8 APA
+ SG_ APA_BrakeFunctionMode : 3|4@0+ (1,0) [0|15] "" Vector__XXX
+ SG_ APA_BrakeModeSts : 6|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ APA_FailureBrakeMode : 9|2@0+ (1,0) [0|3] "" Vector__XXX
+ SG_ APA_ESC_Target_Gear_Request : 12|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ APA_FuncSts : 15|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ APA_ESC_Speed_Limitation : 21|6@0+ (0.1,0) [0|6.3] ""  GW
+ SG_ APA_ESC_Stop_Distance : 47|12@0+ (1,0) [0|4095] ""  GW
+ SG_ APA_MsgCounter : 51|4@0+ (1,0) [0|15] "" Vector__XXX
+ SG_ APA_ChkSum : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 671 APA_EPSSysSt1: 8 APA
+ SG_ APA_EPS_ControlReq : 14|2@0+ (1,0) [0|3] "" Vector__XXX
+ SG_ APA_EPS_SterAngTarValReq : 31|16@0+ (0.1,-513) [-513|513] "" Vector__XXX
+ SG_ APA_MsgCounter1 : 51|4@0+ (1,0) [0|15] "" Vector__XXX
+ SG_ APA_ChkSum1 : 63|8@0+ (1,0) [0|255] "" Vector__XXX
+
+BO_ 922 APA_PDCSysSt: 8 APA
+ SG_ PDC_LRMDistance : 4|5@0+ (1,0) [0|31] "" Vector__XXX
+ SG_ APA_PDCSysSts : 6|2@0+ (1,0) [0|3] "" Vector__XXX
+ SG_ APA_PDCFailureWarning : 7|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ PDC_LRCDistance : 12|5@0+ (1,0) [0|31] "" Vector__XXX
+ SG_ APA_PDCAudibleFrontBeepRate : 15|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ PDC_LFCDistance : 20|5@0+ (1,0) [0|31] "" Vector__XXX
+ SG_ APA_PDCAudibleRearBeepRate : 23|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ PDC_RRCDistance : 31|5@0+ (1,0) [0|31] "" Vector__XXX
+ SG_ PDC_LFMDistance : 36|5@0+ (1,0) [0|31] "" Vector__XXX
+ SG_ PDC_RFCDistance : 26|5@0+ (1,0) [0|31] "" Vector__XXX
+ SG_ PDC_RRMDistance : 47|5@0+ (1,0) [0|31] "" Vector__XXX
+ SG_ APA_AVMSts : 51|4@0+ (1,0) [0|15] "" Vector__XXX
+ SG_ APA_WarningReq : 52|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ PDC_RFMDistance : 42|5@0+ (1,0) [0|31] "" Vector__XXX
+
+BO_ 415 mrESC_SysStAPA: 8 GW
+ SG_ CheckSum : 7|8@0+ (1,0) [0|255] ""  APA
+ SG_ Counter : 15|4@0+ (1,0) [0|15] ""  APA
+ SG_ ESC_APA_Gear_Request : 10|3@0+ (1,0) [0|7] "" Vector__XXX
+ SG_ ESC_APA_GearBoxEnable : 11|1@0+ (1,0) [0|1] "" Vector__XXX
+ SG_ ESC_APA_LC_Availability : 23|8@0+ (1,0) [0|255] ""  APA
+ SG_ ESC_APA_LC_FailureSts : 26|3@0+ (1,0) [0|7] ""  APA
+ SG_ ESC_APA_LC_Status : 30|4@0+ (1,0) [0|15] ""  APA
+ SG_ ESC_APA_CDD_active : 31|1@0+ (1,0) [0|1] ""  APA
+ SG_ ESC_APA_CDD_VehHold : 32|1@0+ (1,0) [0|1] ""  APA
+ SG_ ESC_APA_CDDAvailable : 33|1@0+ (1,0) [0|1] ""  APA
+ SG_ YawRate_raw_Vd : 34|1@0+ (1,0) [0|1] ""  APA
+ SG_ YawRate_raw : 47|16@0- (0.01,0) [-100|100] ""  APA
+
+BO_ 937 srI_Msg1: 8 GW
+ SG_ ExtTempVd : 10|1@0+ (1,0) [0|1] ""  APA
+ SG_ ExtTemp : 39|8@0+ (0.5,-55) [-55|70] ""  APA
+ SG_ ExtTempPect : 7|8@0+ (0.4,0) [0|100] ""  APA
+ SG_ ExtTempState : 9|2@0+ (1,0) [0|3] ""  APA
+
+BO_ 279 mrEMS_EngSt1: 8 GW
+ SG_ EMS_EngSt1MsgCounter : 7|4@0+ (1,0) [0|15] ""  APA
+ SG_ EngState : 12|2@0+ (1,0) [0|3] ""  APA
+ SG_ BrkPdlPsnVd : 15|1@0+ (1,0) [0|1] ""  APA
+ SG_ BrkPdlPsnNC : 32|1@0+ (1,0) [0|1] ""  APA
+ SG_ BrkPdlPsnNO : 33|1@0+ (1,0) [0|1] ""  APA
+ SG_ GasPdlPsnVd : 38|1@0+ (1,0) [0|1] ""  APA
+ SG_ EMS_EngSt1MsgChecksum : 47|8@0+ (1,0) [0|255] ""  APA
+ SG_ GasPdlPsn : 55|8@0+ (0.3937,0) [0|99.9998] ""  APA
+
+BO_ 598 mrEMS_EngSt2: 8 GW
+ SG_ EMS_EngSt2MsgCounter : 7|4@0+ (1,0) [0|15] ""  APA
+ SG_ EMS_EngSt2MsgChecksum : 31|8@0+ (1,0) [0|255] ""  APA
+ SG_ GasPdlPsnRAW : 55|8@0+ (0.3937,0) [0|99.9998] ""  MPC,APA
+ SG_ EVCAN_266_flag256 : 0|1@0+ (1,0) [0|1] ""  MPC
+
+BO_ 1414 HU_AVMSet: 8 GW
+ SG_ HU_Xcoordinate : 7|16@0+ (0.04375,0) [0|800] ""  APA
+ SG_ HU_Ycoordinate : 23|16@0+ (0.04375,0) [0|480] ""  APA
+ SG_ HU_CoTouchmotion : 33|1@0+ (1,0) [0|1] ""  APA
+
+BO_ 837 srESC_SysStACC: 8 GW
+ SG_ mrExEPBRequestSupport : 5|2@0+ (1,0) [0|3] ""  APA
+ SG_ EPBSts : 50|3@0+ (1,0) [0|7] ""  APA
+ SG_ VehicleStandstill : 22|2@0+ (1,0) [0|2] ""  MPC,APA
+ SG_ HSAFailure : 23|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ HSAActive : 43|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ EPBFailureLampSts : 52|2@0+ (1,0) [0|3] ""  APA
+
+BO_ 572 mrESC_FWhlSpd: 8 GW
+ SG_ ESC_FWhlSpdCheckSum : 7|8@0+ (1,0) [0|255] ""  APA
+ SG_ VehSpdVd : 9|2@0+ (1,0) [0|3] ""  MPC,APA
+ SG_ CCAN_32A_flag23C : 10|1@0+ (1,0) [0|1] ""  MPC
+ SG_ CCAN_21F_flag23C : 11|1@0+ (1,0) [0|1] ""  MPC
+ SG_ CCAN_23A_flag23C : 23|1@0+ (1,0) [0|1] ""  MPC
+ SG_ ESC_FWhlSpdCounter : 15|4@0+ (1,0) [0|15] ""  APA
+ SG_ VehSpd : 22|15@0+ (0.05625,0) [0|299.981] ""  MPC,APA
+ SG_ WhlSpdFRVd : 38|2@0+ (1,0) [0|3] ""  MPC,APA
+ SG_ WhlSpdFR : 36|13@0+ (0.05625,0) [0|299.981] ""  MPC,APA
+ SG_ WhlSpdFLVd : 54|2@0+ (1,0) [0|3] ""  MPC,APA
+ SG_ WhlSpdFL : 52|13@0+ (0.05625,0) [0|299.981] ""  MPC,APA
+
+BO_ 573 mrESC_RWhlSpd: 8 GW
+ SG_ mrESC_RWhlSpdCheckSum : 7|8@0+ (1,0) [0|255] ""  APA
+ SG_ mrESC_RWhlSpdCounter : 15|4@0+ (1,0) [0|15] ""  APA
+ SG_ WhlSpdRRVd : 38|2@0+ (1,0) [0|3] ""  MPC,APA
+ SG_ WhlSpdRR : 36|13@0+ (0.05625,0) [0|299.981] ""  MPC,APA
+ SG_ WhlSpdRLVd : 54|2@0+ (1,0) [0|3] ""  MPC,APA
+ SG_ WhlSpdRL : 52|13@0+ (0.05625,0) [0|299.981] ""  MPC,APA
+ SG_ CCAN_21F_flag23D : 39|1@0+ (1,0) [0|1] ""  MPC
+ SG_ CCAN_23A_flag23D : 55|1@0+ (1,0) [0|1] ""  MPC
+
+BO_ 810 mrESC_WhlSpdDir: 8 GW
+ SG_ mrESC_WhlSpdDirCheckSum : 7|8@0+ (1,0) [0|255] ""  MPC,APA
+ SG_ FLWheelDir : 9|2@0+ (1,0) [0|3] ""  MPC,APA
+ SG_ FRWheelDir : 11|2@0+ (1,0) [0|3] ""  MPC,APA
+ SG_ RLWheelDir : 13|2@0+ (1,0) [0|3] ""  MPC,APA
+ SG_ RRWheelDir : 15|2@0+ (1,0) [0|3] ""  MPC,APA
+ SG_ mrESC_WhlSpdDirCounter : 23|4@0+ (1,0) [0|15] ""  MPC,APA
+ SG_ RRWheelSpdPulse : 19|11@0+ (1,0) [0|2046] ""  MPC,APA
+ SG_ RLWheelSpdPulse : 24|11@0+ (1,0) [0|2046] ""  MPC,APA
+ SG_ FRWheelSpdPulse : 45|11@0+ (1,0) [0|2046] ""  MPC,APA
+ SG_ FLWheelSpdPulse : 50|11@0+ (1,0) [0|2046] ""  MPC,APA
+
+BO_ 500 srBI_VehSt: 8 GW
+ SG_ KeyStateVd : 1|2@0+ (1,0) [0|3] ""  APA
+ SG_ Poslamp : 2|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ TrunkDoorSts : 3|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ PsgDoorStatus : 4|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ RRDoorStatus : 5|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ RLDoorStatus : 6|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ DRVUnlockState : 7|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ EVCAN_668_flag1F4 : 8|1@0+ (1,0) [0|1] ""  MPC
+ SG_ BCAN_2CD_flag1F4 : 9|1@0+ (1,0) [0|1] ""  MPC
+ SG_ DrvDoorStatus : 10|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ BCAN_2AB_flag1F4 : 11|1@0+ (1,0) [0|1] ""  MPC
+ SG_ LanguageSet : 54|3@0+ (1,0) [0|5] ""  APA
+ SG_ HeadLampLowBeamCtrl : 12|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ HeadLampHighBeamCtrl : 13|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ TurnSwitch : 15|2@0+ (1,0) [0|2] ""  MPC,APA
+ SG_ KeyState : 18|3@0+ (1,0) [0|7] ""  MPC,APA
+ SG_ HoodStatus : 19|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ OccupantDetDRVSide : 20|1@0+ (1,0) [0|1] ""  APA
+ SG_ HazardWarnLightSW : 22|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ TurnSwitchVd : 23|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ FrontWiperStatus : 25|2@0+ (1,0) [0|2] ""  MPC
+ SG_ ReverseSW : 27|1@0+ (1,0) [0|0] ""  MPC,APA
+ SG_ DirIndicationLeft : 32|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ DirIndicationRight : 33|1@0+ (1,0) [0|1] ""  MPC,APA
+ SG_ AutoLightSW : 43|1@0+ (1,0) [0|1] ""  MPC
+ SG_ FrontFogLamp : 44|1@0+ (1,0) [0|1] ""  APA
+ SG_ RearFogLamp : 45|1@0+ (1,0) [0|1] ""  MPC
+
+BO_ 885 mrAPA_VoiceIndication: 8 APA
+ SG_ APA_AvailableState : 1|2@0+ (1,0) [0|3] ""  GW
+ SG_ APA_ParkDemand : 2|1@0+ (1,0) [0|1] ""  GW
+ SG_ APA_ParkSpaceNumber : 7|4@0+ (1,0) [0|8] ""  GW
+ SG_ APA_ParkIndication : 11|4@0+ (1,0) [0|8] ""  GW
+ SG_ APA_ParkoutCondition : 13|2@0+ (1,0) [0|2] ""  GW
+ SG_ APA_ParkoutDirIndication : 14|1@0+ (1,0) [0|1] ""  GW
+ SG_ APA_CloseDoorReq : 17|2@0+ (1,0) [0|2] ""  GW
+ SG_ APA_BeltedReq : 19|2@0+ (1,0) [0|2] ""  GW
+ SG_ APA_BrakeingReq : 21|2@0+ (1,0) [0|2] ""  GW
+ SG_ APA_MoveObjectIndication : 22|1@0+ (1,0) [0|1] ""  GW
+ SG_ APA_ParkTimeout : 23|1@0+ (1,0) [0|1] ""  GW
+
+BO_ 1037 GW_OSEKNM: 8 GW
+ SG_ GW_NM_DestAdd : 7|8@0+ (1,0) [0|255] ""  MPC,APA,MRR
+ SG_ GW_NM_Alive : 8|1@0+ (1,0) [0|1] ""  MPC,APA,MRR
+ SG_ GW_NM_LimpHome : 9|1@0+ (1,0) [0|1] ""  MPC,APA,MRR
+ SG_ GW_NM_Ring : 10|1@0+ (1,0) [0|1] ""  MPC,APA,MRR
+ SG_ GW_NM_SleepAck : 12|1@0+ (1,0) [0|1] ""  MPC,APA,MRR
+ SG_ GW_NM_SleepInd : 13|1@0+ (1,0) [0|1] ""  MPC,APA,MRR
+
+BO_ 1039 MPC_OSEKNM: 8 MPC
+ SG_ ADAS_NM_DestAdd : 7|8@0+ (1,0) [0|255] ""  APA,GW,MRR
+ SG_ ADAS_NM_Alive : 8|1@0+ (1,0) [0|1] ""  APA,GW,MRR
+ SG_ ADAS_NM_LimpHome : 9|1@0+ (1,0) [0|1] ""  APA,GW,MRR
+ SG_ ADAS_NM_Ring : 10|1@0+ (1,0) [0|1] ""  APA,GW,MRR
+ SG_ ADAS_NM_SleepAck : 12|1@0+ (1,0) [0|1] ""  APA,GW,MRR
+ SG_ ADAS_NM_SleepInd : 13|1@0+ (1,0) [0|1] ""  APA,GW,MRR
+
+BO_ 1035 MRR_OSEKNM: 8 MRR
+ SG_ MRR_NM_DestAdd : 7|8@0+ (1,0) [0|255] ""  MPC,APA,GW
+ SG_ MRR_NM_Alive : 8|1@0+ (1,0) [0|1] ""  MPC,APA,GW
+ SG_ MRR_NM_LimpHome : 9|1@0+ (1,0) [0|1] ""  MPC,APA,GW
+ SG_ MRR_NM_Ring : 10|1@0+ (1,0) [0|1] ""  MPC,APA,GW
+ SG_ MRR_NM_SleepAck : 12|1@0+ (1,0) [0|1] ""  MPC,APA,GW
+ SG_ MRR_NM_SleepInd : 13|1@0+ (1,0) [0|1] ""  MPC,APA,GW
+
+BO_ 1042 APA_OSEKNM: 8 APA
+ SG_ APA_NM_DestAdd : 7|8@0+ (1,0) [0|255] ""  MPC,GW,MRR
+ SG_ APA_NM_Alive : 8|1@0+ (1,0) [0|1] ""  MPC,GW,MRR
+ SG_ APA_NM_LimpHome : 9|1@0+ (1,0) [0|1] ""  MPC,GW,MRR
+ SG_ APA_NM_Ring : 10|1@0+ (1,0) [0|1] ""  MPC,GW,MRR
+ SG_ APA_NM_SleepAck : 12|1@0+ (1,0) [0|1] ""  MPC,GW,MRR
+ SG_ APA_NM_SleepInd : 13|1@0+ (1,0) [0|1] ""  MPC,GW,MRR
+
+BO_ 1423 mrHU_APAVoiceSet: 8 GW
+ SG_ APASW : 0|1@0+ (1,0) [0|1] ""  APA
+ SG_ AVMSW : 1|1@0+ (1,0) [0|1] ""  APA
+ SG_ Parkdirection : 3|2@0+ (1,0) [0|3] ""  APA
+ SG_ APAmenu : 5|2@0+ (1,0) [0|3] ""  APA
+ SG_ Parkingspace : 11|4@0+ (1,0) [0|15] ""  APA
+ SG_ Parkingoutdirection : 13|2@0+ (1,0) [0|3] ""  APA
+ SG_ HU_Failure : 14|1@0+ (1,0) [0|1] ""  APA
+ SG_ HU_APA_Display : 15|1@0+ (1,0) [0|1] ""  APA
+
+BO_ 1665 ADAS_Version: 8 MPC
+ SG_ MPCSWVersion : 7|16@0+ (1,0) [0|65535] ""  GW
+ SG_ MPCHWVersion : 23|8@0+ (1,0) [0|255] ""  GW
+
+BO_ 1667 MRR_Version: 8 MRR
+ SG_ MRRSWVersion : 31|16@0+ (1,0) [0|65535] ""  GW
+ SG_ MRRHWVersion : 47|8@0+ (1,0) [0|65535] ""  GW
+
+BO_ 1682 TBOX_EVCAN_F02: 8 GW
+ SG_ UpdMPCFlag : 3|2@0+ (1,0) [0|3] ""  MPC
+ SG_ UpgradeModMPC : 9|2@0+ (1,0) [0|3] ""  MPC
+ SG_ UpdMPCSucc : 11|2@0+ (1,0) [0|3] ""  MPC
+ SG_ UpdMRRFlag : 13|2@0+ (1,0) [0|3] ""  MPC
+ SG_ UpgradeModMRR : 15|2@0+ (1,0) [0|3] ""  MPC
+ SG_ UpdMRRSucc : 17|2@0+ (1,0) [0|3] ""  MPC
+
+BO_ 1696 TBOX_BCAN_F05: 8 GW
+ SG_ ECUUpdSatisfyFlag : 39|8@0+ (1,0) [0|255] ""  MPC
+
+BO_ 1294 HWP_CIPV_Info: 8 MPC
+ SG_ HWP_CIPV_Flag : 0|1@0+ (1,0) [0|1] ""  GW
+ SG_ HWP_CIPV_Type : 3|3@0+ (1,0) [0|7] ""  GW
+ SG_ HWP_CIPV_XpositionRaw : 11|12@0+ (0.0625,0) [0|250] ""  GW
+ SG_ HWP_CIPV_YpositionRaw : 31|10@0+ (0.0625,0) [-32|31.9375] ""  GW
+ SG_ HWP_CIPV_HeadRaw : 55|16@0+ (0.01,0) [-327.68|327.67] ""  GW
+
+BO_ 1295 HWP_Object1_Info: 8 MPC
+ SG_ HWP_Object1_Flag : 0|1@0+ (1,0) [0|1] ""  GW
+ SG_ HWP_Object1_Type : 3|3@0+ (1,0) [0|7] ""  GW
+ SG_ HWP_Object1_XpositionRaw : 11|12@0+ (0.0625,0) [0|250] ""  GW
+ SG_ HWP_Object1_YpositionRaw : 31|10@0+ (0.0625,0) [-32|31.9375] ""  GW
+ SG_ HWP_Object1_Lane_Assignment : 34|3@0+ (1,0) [0|5] ""  GW
+ SG_ HWP_Object1_ID : 47|8@0+ (1,0) [0|63] ""  GW
+ SG_ HWP_Object1_HeadRaw : 55|16@0+ (0.01,0) [-327.68|327.67] ""  GW
+
+BO_ 1322 HWP_Object2_Info: 8 MPC
+ SG_ HWP_Object2_Flag : 0|1@0+ (1,0) [0|1] ""  GW
+ SG_ HWP_Object2_Type : 3|3@0+ (1,0) [0|7] ""  GW
+ SG_ HWP_Object2_XpositionRaw : 11|12@0+ (0.0625,0) [0|250] ""  GW
+ SG_ HWP_Object2_YpositionRaw : 31|10@0+ (0.0625,0) [-32|31.9375] ""  GW
+ SG_ HWP_Object2_Lane_Assignment : 34|3@0+ (1,0) [0|5] ""  GW
+ SG_ HWP_Object2_ID : 47|8@0+ (1,0) [0|63] ""  GW
+ SG_ HWP_Object2_HeadRaw : 55|16@0+ (0.01,0) [-327.68|327.67] ""  GW
+
+BO_ 1339 HWP_Lane_Left_Info: 8 MPC
+ SG_ HWP_Lane_Left : 7|2@0+ (1,0) [0|2] ""  GW
+ SG_ HWP_Lane_Left_C0 : 4|13@0+ (0.0078125,-32) [-32|31.9921875] ""  GW
+ SG_ HWP_Lane_Left_C1 : 23|16@0+ (1.08949E-005,-0.3569932) [-0.3569932|0.3570040715] ""  GW
+ SG_ HWP_Lane_Left_C2 : 39|16@0+ (9.766E-007,-0.03200025) [-0.03200025|0.032001231] ""  GW
+ SG_ HWP_Lane_Left_C3 : 55|16@0+ (3.725E-009,-0.0001220571) [-0.0001220571|0.000122060775] ""  GW
+
+BO_ 1341 HWP_Lane_Right_Info: 8 MPC
+ SG_ HWP_Lane_Right : 7|2@0+ (1,0) [0|2] ""  GW
+ SG_ HWP_Lane_Right_C0 : 4|13@0+ (0.0078125,-32) [-32|31.9921875] ""  GW
+ SG_ HWP_Lane_Right_C1 : 23|16@0+ (1.08949E-005,-0.3569932) [-0.3569932|0.3570040715] ""  GW
+ SG_ HWP_Lane_Right_C2 : 39|16@0+ (9.766E-007,-0.03200025) [-0.03200025|0.032001231] ""  GW
+ SG_ HWP_Lane_Right_C3 : 55|16@0+ (3.725E-009,-0.0001220571) [-0.0001220571|0.000122060775] ""  GW
+
+BO_ 1020 HU_VoiceCmd_MRRSpd: 8 GW
+ SG_ AccTargetSpdByVoice : 7|8@0+ (1,0) [0|150] ""  MPC
+
+
+
+CM_ SG_ 1659 DriveModeSwch "NaN";
+CM_ SG_ 125 OccupantDetDRVSideSRS "NaN";
+CM_ SG_ 125 OccupantDetDRVSideVd "NaN";
+CM_ SG_ 675 EPSFailure "NaN";
+CM_ SG_ 675 CCAN_1A3_flag2A3 "NaN";
+CM_ SG_ 675 TorsionBarTorqueDir "NaN";
+CM_ SG_ 675 TosionBarTorqueValid "NaN";
+CM_ SG_ 675 TorsionBarTorque "NaN";
+CM_ SG_ 675 EPSLKSCtrlStatus "NaN";
+CM_ SG_ 675 EPS_StrSysStCounter "NaN";
+CM_ SG_ 675 EPS_StrSysStCheckSum "NaN";
+CM_ SG_ 675 EPS_APAControlSts "NaN";
+CM_ SG_ 675 EPS_APAControlFaultSts "NaN";
+CM_ SG_ 309 EPS_SASChecksum "NaN";
+CM_ SG_ 309 EPS_SASMsgCounter "NaN";
+CM_ SG_ 309 SAS_FailureSts "NaN";
+CM_ SG_ 309 SAS_CalibrationSts "NaN";
+CM_ SG_ 309 SAS_TrimmingStatus "NaN";
+CM_ SG_ 309 SteeringWheelAngle "NaN";
+CM_ SG_ 309 SAS_SteerWheelRotSpd "NaN";
+CM_ SG_ 309 SAS_SteerWheelRotDir "NaN";
+CM_ SG_ 565 BrkPedVd "NaN";
+CM_ SG_ 565 BrkPedSts "NaN";
+CM_ SG_ 681 EPBSys "NaN";
+CM_ SG_ 681 FailureLampSts "NaN";
+CM_ SG_ 681 EPBSWSts "NaN";
+CM_ SG_ 273 VCUGearLevPos "NaN";
+CM_ SG_ 271 GasPdlPsnExVd "NaN";
+CM_ SG_ 271 GasPdlPsnEx "NaN";
+CM_ SG_ 271 EVCAN_111_flag10F "NaN";
+CM_ SG_ 271 EVCAN_668_flag10F "NaN";
+CM_ SG_ 1640 HVBSOCVCU "NaN";
+CM_ SG_ 530 TMSpd "NaN";
+CM_ SG_ 530 TMTrq "NaN";
+CM_ SG_ 614 VCU_ADASF01CheckSum "NaN";
+CM_ SG_ 614 VCU_ADASF01Counter "NaN";
+CM_ SG_ 614 VCU_PowerControlResponse "NaN";
+CM_ SG_ 614 VCU_DriverDemandTorque "NaN";
+CM_ SG_ 614 CurrentGear "NaN";
+CM_ SG_ 614 CurrentGearVd "NaN";
+CM_ SG_ 614 EgdGearDsp "NaN";
+CM_ SG_ 614 GearPsn "NaN";
+CM_ SG_ 614 GasPdlPsnVdVCU "NaN";
+CM_ SG_ 614 EmModeFlag "NaN";
+CM_ SG_ 614 ECGPOvrd "NaN";
+CM_ SG_ 614 ACM_LeverIntervention "NaN";
+CM_ SG_ 339 VLCFailure "NaN";
+CM_ SG_ 339 CDDActiveVehHold "NaN";
+CM_ SG_ 339 VLC_InternalTargetAcceleration "NaN";
+CM_ SG_ 339 AutoHoldActive "NaN";
+CM_ SG_ 339 ARPactive "NaN";
+CM_ SG_ 339 HBBActive "NaN";
+CM_ SG_ 339 VLCActive "NaN";
+CM_ SG_ 339 VLCAvailable "NaN";
+CM_ SG_ 339 VCU_ACCCnt "NaN";
+CM_ SG_ 339 VCU_ACCCsm "NaN";
+CM_ SG_ 339 ACCEnableSwitch "NaN";
+CM_ SG_ 339 ACCEnableSwitchVd "NaN";
+CM_ SG_ 339 ACCSetMinus "NaN";
+CM_ SG_ 339 ACCSetMinusVd "NaN";
+CM_ SG_ 339 ACCResumePlus "NaN";
+CM_ SG_ 339 ACCResumePlusVd "NaN";
+CM_ SG_ 339 ACCDeactivate "NaN";
+CM_ SG_ 339 ACCDeactivateVd "NaN";
+CM_ SG_ 339 ACCSwitch1 "NaN";
+CM_ SG_ 339 ACCSwitch1Vd "NaN";
+CM_ SG_ 339 MenuResp_Error "NaN";
+CM_ SG_ 339 ACCPassiveSts "NaN";
+CM_ SG_ 339 CDD_available "NaN";
+CM_ SG_ 339 CDD_active "NaN";
+CM_ SG_ 673 ABA_active "NaN";
+CM_ SG_ 673 ABA_available "NaN";
+CM_ SG_ 673 ABP_active "NaN";
+CM_ SG_ 673 ABP_available "NaN";
+CM_ SG_ 673 AEB_active "NaN";
+CM_ SG_ 673 AEB_available "NaN";
+CM_ SG_ 673 AWB_active "NaN";
+CM_ SG_ 673 AWB_available "NaN";
+CM_ SG_ 673 EBS_BrkPelPosActVD "NaN";
+CM_ SG_ 673 EBS_BrkPelPosAct "NaN";
+CM_ SG_ 674 CDDActive "NaN";
+CM_ SG_ 674 CDDAvailable "NaN";
+CM_ SG_ 430 ESCCheckSum1 "NaN";
+CM_ SG_ 430 ESCCounter1 "NaN";
+CM_ SG_ 430 ABSItvInProgress "NaN";
+CM_ SG_ 430 VDCItvInProgress "NaN";
+CM_ SG_ 430 TCSItvInProgress "NaN";
+CM_ SG_ 430 NoBrakeForce "NaN";
+CM_ SG_ 430 BrkPrsOffsetVd "NaN";
+CM_ SG_ 430 BrkPrsOffset "NaN";
+CM_ SG_ 430 CCAN_32A_flag1AE "NaN";
+CM_ SG_ 430 CCAN_1AE_flag1AE "NaN";
+CM_ SG_ 517 BrakeDiscTempHigh "NaN";
+CM_ SG_ 517 ESCSw "NaN";
+CM_ SG_ 517 ESCSwVd "NaN";
+CM_ SG_ 517 BrkPrsVd "NaN";
+CM_ SG_ 517 BrkPrs "NaN";
+CM_ SG_ 517 LongAccVd "NaN";
+CM_ SG_ 517 LongAcc "NaN";
+CM_ SG_ 517 EBDFailure "NaN";
+CM_ SG_ 517 ABSFailure "NaN";
+CM_ SG_ 517 VDCFailure "NaN";
+CM_ SG_ 517 TCSFailure "NaN";
+CM_ SG_ 517 ESCCsm_205 "NaN";
+CM_ SG_ 517 ESC_BrakeSt2Counter "NaN";
+CM_ SG_ 518 YawRateOffset "NaN";
+CM_ SG_ 518 YawRateOffsetVd "NaN";
+CM_ SG_ 543 mrESC_XYOffsetCounter "NaN";
+CM_ SG_ 543 mrESC_XYOffsetCheckSum "NaN";
+CM_ SG_ 543 YawRate "NaN";
+CM_ SG_ 543 YawRateVd "NaN";
+CM_ SG_ 543 CCAN_205_flag21F "NaN";
+CM_ SG_ 543 CCAN_21F_flag21F "NaN";
+CM_ SG_ 543 LatAcc "NaN";
+CM_ SG_ 543 LatAccVd "NaN";
+CM_ SG_ 1303 OdometerInfoVd "NaN";
+CM_ SG_ 1303 OdometerInfo "NaN";
+CM_ SG_ 1304 DISFail "NaN";
+CM_ SG_ 1304 QDashACCFail "NaN";
+CM_ SG_ 1304 DispVehSpd "NaN";
+CM_ SG_ 1408 GPSTimeYear "NaN";
+CM_ SG_ 1408 GPSTimeMonth "NaN";
+CM_ SG_ 1408 GPSTimeDay "NaN";
+CM_ SG_ 1408 GPSTimeHour "NaN";
+CM_ SG_ 1408 GPSTimeMinute "NaN";
+CM_ SG_ 1408 GPSTimeSecond "NaN";
+CM_ SG_ 1408 GPSTimeStatus "NaN";
+CM_ SG_ 1301 SteeringModeSet "NaN";
+CM_ SG_ 1301 CCAN_1A3_flag515 "NaN";
+CM_ SG_ 1301 BCAN_583_flag515 "NaN";
+CM_ SG_ 1301 BCAN_587_flag515 "NaN";
+CM_ SG_ 1301 SLASwitch "NaN";
+CM_ SG_ 1301 LKA_LDW_SWSet "NaN";
+CM_ SG_ 1301 FCWSet "NaN";
+CM_ SG_ 1301 AEBSet "NaN";
+CM_ SG_ 1301 ADASSensitivitySet "NaN";
+CM_ SG_ 1301 HMASwitchSet "NaN";
+CM_ SG_ 1301 ADAS_ModeSet "NaN";
+CM_ SG_ 1301 NavSpeedLimitStatus "NaN";
+CM_ SG_ 1301 NavCountryCode "NaN";
+CM_ SG_ 1301 NavCurrRoadType "NaN";
+CM_ SG_ 1301 FCWSensiSet "NaN";
+CM_ SG_ 608 HMA_Status "NaN";
+CM_ SG_ 608 HMA_HighbeamReq "NaN";
+CM_ SG_ 608 ADAS_LeftTrackingStatus "NaN";
+CM_ SG_ 608 ADAS_RightTrackingStatus "NaN";
+CM_ SG_ 608 LDW_Status "NaN";
+CM_ SG_ 608 ADAS_Sensitivity "NaN";
+CM_ SG_ 608 LKA_Status "NaN";
+CM_ SG_ 608 ADAS_TakeoverReq "NaN";
+CM_ SG_ 608 ADAS_Status "NaN";
+CM_ SG_ 608 ADAS_WarningVibration "NaN";
+CM_ SG_ 608 ADAS_WarningAudio "NaN";
+CM_ SG_ 608 SLAState "NaN";
+CM_ SG_ 608 SLASpdlimit "NaN";
+CM_ SG_ 608 ADAS_TorqueReqStatus "NaN";
+CM_ SG_ 608 ADAS_TorqueReq "NaN";
+CM_ SG_ 608 MPC_AliveCounter "NaN";
+CM_ SG_ 608 MPC_CheckSum "NaN";
+CM_ SG_ 608 UpgradeAvaMPC "NaN";
+CM_ SG_ 912 UpgradeAvaMRR "NaN";
+CM_ SG_ 912 DxTarObj "NaN";
+CM_ SG_ 912 TauGapSet "NaN";
+CM_ SG_ 912 ObjValid "NaN";
+CM_ SG_ 912 TakeOverReq "NaN";
+CM_ SG_ 912 ACCSetCruVehSpdDis "NaN";
+CM_ SG_ 912 Textinfo "NaN";
+CM_ SG_ 912 ACC_SysStHMI_AliveCounter "NaN";
+CM_ SG_ 912 ACCMode_HMI "NaN";
+CM_ SG_ 912 PCW_latentWarning "NaN";
+CM_ SG_ 912 PCW_preWarning "NaN";
+CM_ SG_ 912 FRS_FCW_Switch "NaN";
+CM_ SG_ 912 FRS_AEB_Switch "NaN";
+CM_ SG_ 912 FRS_AEB_Status "NaN";
+CM_ SG_ 912 FRS_FCW_status "NaN";
+CM_ SG_ 912 FRS_AEB_status_testinfo "NaN";
+CM_ SG_ 912 MRR_FCWSensitivity "NaN";
+CM_ SG_ 912 ACC_SysStHMI_CheckSum "NaN";
+CM_ SG_ 320 AccAxTarAim "NaN";
+CM_ SG_ 320 AccAxTarUpperComfBand "NaN";
+CM_ SG_ 320 AccAxTarLowerComfBand "NaN";
+CM_ SG_ 320 AccdAxTarUpperLimit "NaN";
+CM_ SG_ 320 AccdAxTarLowerLimit "NaN";
+CM_ SG_ 320 ShutdownMode "NaN";
+CM_ SG_ 320 ACCMode_ESP "NaN";
+CM_ SG_ 320 BrakePreferred "NaN";
+CM_ SG_ 320 ACC_Minimum_Braking "NaN";
+CM_ SG_ 320 DriveOff "NaN";
+CM_ SG_ 320 DecToStop "NaN";
+CM_ SG_ 320 ACC_AliveCounter "NaN";
+CM_ SG_ 320 ACC_ChkSum "NaN";
+CM_ SG_ 323 AEBDecCtrlRequest "NaN";
+CM_ SG_ 323 CollisionMitigationDecCtrlReq "NaN";
+CM_ SG_ 323 DecelerationSupportDecCtrlReq "NaN";
+CM_ SG_ 323 PEDPDecCtrlRequest "NaN";
+CM_ SG_ 323 ABALevel "NaN";
+CM_ SG_ 323 ABARequest "NaN";
+CM_ SG_ 323 AEBaxTar "NaN";
+CM_ SG_ 323 AWBLevel "NaN";
+CM_ SG_ 323 AWBRequest "NaN";
+CM_ SG_ 323 PrefillRequest "NaN";
+CM_ SG_ 323 ACC_PSSSysSt_AliveCounter "NaN";
+CM_ SG_ 323 ACC_PSSSysSt_ChkSum "NaN";
+CM_ SG_ 670 APA_BrakeFunctionMode "NaN";
+CM_ SG_ 670 APA_BrakeModeSts "NaN";
+CM_ SG_ 670 APA_FailureBrakeMode "NaN";
+CM_ SG_ 670 APA_ESC_Target_Gear_Request "NaN";
+CM_ SG_ 670 APA_FuncSts "NaN";
+CM_ SG_ 670 APA_ESC_Speed_Limitation "NaN";
+CM_ SG_ 670 APA_ESC_Stop_Distance "NaN";
+CM_ SG_ 670 APA_MsgCounter "NaN";
+CM_ SG_ 670 APA_ChkSum "NaN";
+CM_ SG_ 671 APA_EPS_ControlReq "NaN";
+CM_ SG_ 671 APA_EPS_SterAngTarValReq "NaN";
+CM_ SG_ 671 APA_MsgCounter1 "NaN";
+CM_ SG_ 671 APA_ChkSum1 "NaN";
+CM_ SG_ 922 PDC_LRMDistance "NaN";
+CM_ SG_ 922 APA_PDCSysSts "NaN";
+CM_ SG_ 922 APA_PDCFailureWarning "NaN";
+CM_ SG_ 922 PDC_LRCDistance "NaN";
+CM_ SG_ 922 APA_PDCAudibleFrontBeepRate "NaN";
+CM_ SG_ 922 PDC_LFCDistance "NaN";
+CM_ SG_ 922 APA_PDCAudibleRearBeepRate "NaN";
+CM_ SG_ 922 PDC_RRCDistance "NaN";
+CM_ SG_ 922 PDC_LFMDistance "NaN";
+CM_ SG_ 922 PDC_RFCDistance "NaN";
+CM_ SG_ 922 PDC_RRMDistance "NaN";
+CM_ SG_ 922 APA_AVMSts "NaN";
+CM_ SG_ 922 APA_WarningReq "NaN";
+CM_ SG_ 922 PDC_RFMDistance "NaN";
+CM_ SG_ 415 CheckSum "NaN";
+CM_ SG_ 415 Counter "NaN";
+CM_ SG_ 415 ESC_APA_Gear_Request "NaN";
+CM_ SG_ 415 ESC_APA_GearBoxEnable "NaN";
+CM_ SG_ 415 ESC_APA_LC_Availability "NaN";
+CM_ SG_ 415 ESC_APA_LC_FailureSts "NaN";
+CM_ SG_ 415 ESC_APA_LC_Status "NaN";
+CM_ SG_ 415 ESC_APA_CDD_active "NaN";
+CM_ SG_ 415 ESC_APA_CDD_VehHold "NaN";
+CM_ SG_ 415 ESC_APA_CDDAvailable "NaN";
+CM_ SG_ 415 YawRate_raw_Vd "NaN";
+CM_ SG_ 415 YawRate_raw "NaN";
+CM_ SG_ 937 ExtTempVd "NaN";
+CM_ SG_ 937 ExtTemp "NaN";
+CM_ SG_ 937 ExtTempPect "NaN";
+CM_ SG_ 937 ExtTempState "NaN";
+CM_ SG_ 279 EMS_EngSt1MsgCounter "NaN";
+CM_ SG_ 279 EngState "NaN";
+CM_ SG_ 279 BrkPdlPsnVd "NaN";
+CM_ SG_ 279 BrkPdlPsnNC "NaN";
+CM_ SG_ 279 BrkPdlPsnNO "NaN";
+CM_ SG_ 279 GasPdlPsnVd "NaN";
+CM_ SG_ 279 EMS_EngSt1MsgChecksum "NaN";
+CM_ SG_ 279 GasPdlPsn "NaN";
+CM_ SG_ 598 EMS_EngSt2MsgCounter "NaN";
+CM_ SG_ 598 EMS_EngSt2MsgChecksum "NaN";
+CM_ SG_ 598 GasPdlPsnRAW "NaN";
+CM_ SG_ 598 EVCAN_266_flag256 "NaN";
+CM_ SG_ 1414 HU_Xcoordinate "NaN";
+CM_ SG_ 1414 HU_Ycoordinate "NaN";
+CM_ SG_ 1414 HU_CoTouchmotion "NaN";
+CM_ SG_ 837 mrExEPBRequestSupport "NaN";
+CM_ SG_ 837 EPBSts "NaN";
+CM_ SG_ 837 VehicleStandstill "NaN";
+CM_ SG_ 837 HSAFailure "NaN";
+CM_ SG_ 837 HSAActive "NaN";
+CM_ SG_ 837 EPBFailureLampSts "NaN";
+CM_ SG_ 572 ESC_FWhlSpdCheckSum "NaN";
+CM_ SG_ 572 VehSpdVd "NaN";
+CM_ SG_ 572 CCAN_32A_flag23C "NaN";
+CM_ SG_ 572 CCAN_21F_flag23C "NaN";
+CM_ SG_ 572 CCAN_23A_flag23C "NaN";
+CM_ SG_ 572 ESC_FWhlSpdCounter "NaN";
+CM_ SG_ 572 VehSpd "NaN";
+CM_ SG_ 572 WhlSpdFRVd "NaN";
+CM_ SG_ 572 WhlSpdFR "NaN";
+CM_ SG_ 572 WhlSpdFLVd "NaN";
+CM_ SG_ 572 WhlSpdFL "NaN";
+CM_ SG_ 573 mrESC_RWhlSpdCheckSum "NaN";
+CM_ SG_ 573 mrESC_RWhlSpdCounter "NaN";
+CM_ SG_ 573 WhlSpdRRVd "NaN";
+CM_ SG_ 573 WhlSpdRR "NaN";
+CM_ SG_ 573 WhlSpdRLVd "NaN";
+CM_ SG_ 573 WhlSpdRL "NaN";
+CM_ SG_ 573 CCAN_21F_flag23D "NaN";
+CM_ SG_ 573 CCAN_23A_flag23D "NaN";
+CM_ SG_ 810 mrESC_WhlSpdDirCheckSum "NaN";
+CM_ SG_ 810 FLWheelDir "NaN";
+CM_ SG_ 810 FRWheelDir "NaN";
+CM_ SG_ 810 RLWheelDir "NaN";
+CM_ SG_ 810 RRWheelDir "NaN";
+CM_ SG_ 810 mrESC_WhlSpdDirCounter "NaN";
+CM_ SG_ 810 RRWheelSpdPulse "NaN";
+CM_ SG_ 810 RLWheelSpdPulse "NaN";
+CM_ SG_ 810 FRWheelSpdPulse "NaN";
+CM_ SG_ 810 FLWheelSpdPulse "NaN";
+CM_ SG_ 500 KeyStateVd "NaN";
+CM_ SG_ 500 Poslamp "NaN";
+CM_ SG_ 500 TrunkDoorSts "NaN";
+CM_ SG_ 500 PsgDoorStatus "NaN";
+CM_ SG_ 500 RRDoorStatus "NaN";
+CM_ SG_ 500 RLDoorStatus "NaN";
+CM_ SG_ 500 DRVUnlockState "NaN";
+CM_ SG_ 500 EVCAN_668_flag1F4 "NaN";
+CM_ SG_ 500 BCAN_2CD_flag1F4 "NaN";
+CM_ SG_ 500 DrvDoorStatus "NaN";
+CM_ SG_ 500 BCAN_2AB_flag1F4 "NaN";
+CM_ SG_ 500 LanguageSet "NaN";
+CM_ SG_ 500 HeadLampLowBeamCtrl "NaN";
+CM_ SG_ 500 HeadLampHighBeamCtrl "NaN";
+CM_ SG_ 500 TurnSwitch "NaN";
+CM_ SG_ 500 KeyState "NaN";
+CM_ SG_ 500 HoodStatus "NaN";
+CM_ SG_ 500 OccupantDetDRVSide "NaN";
+CM_ SG_ 500 HazardWarnLightSW "NaN";
+CM_ SG_ 500 TurnSwitchVd "NaN";
+CM_ SG_ 500 FrontWiperStatus "NaN";
+CM_ SG_ 500 ReverseSW "NaN";
+CM_ SG_ 500 DirIndicationLeft "NaN";
+CM_ SG_ 500 DirIndicationRight "NaN";
+CM_ SG_ 500 AutoLightSW "NaN";
+CM_ SG_ 500 FrontFogLamp "NaN";
+CM_ SG_ 500 RearFogLamp "NaN";
+CM_ SG_ 885 APA_AvailableState "NaN";
+CM_ SG_ 885 APA_ParkDemand "NaN";
+CM_ SG_ 885 APA_ParkSpaceNumber "NaN";
+CM_ SG_ 885 APA_ParkIndication "NaN";
+CM_ SG_ 885 APA_ParkoutCondition "NaN";
+CM_ SG_ 885 APA_ParkoutDirIndication "NaN";
+CM_ SG_ 885 APA_CloseDoorReq "NaN";
+CM_ SG_ 885 APA_BeltedReq "NaN";
+CM_ SG_ 885 APA_BrakeingReq "NaN";
+CM_ SG_ 885 APA_MoveObjectIndication "NaN";
+CM_ SG_ 885 APA_ParkTimeout "NaN";
+CM_ SG_ 1037 GW_NM_DestAdd "NaN";
+CM_ SG_ 1037 GW_NM_Alive "NaN";
+CM_ SG_ 1037 GW_NM_LimpHome "NaN";
+CM_ SG_ 1037 GW_NM_Ring "NaN";
+CM_ SG_ 1037 GW_NM_SleepAck "NaN";
+CM_ SG_ 1037 GW_NM_SleepInd "NaN";
+CM_ SG_ 1039 ADAS_NM_DestAdd "NaN";
+CM_ SG_ 1039 ADAS_NM_Alive "NaN";
+CM_ SG_ 1039 ADAS_NM_LimpHome "NaN";
+CM_ SG_ 1039 ADAS_NM_Ring "NaN";
+CM_ SG_ 1039 ADAS_NM_SleepAck "NaN";
+CM_ SG_ 1039 ADAS_NM_SleepInd "NaN";
+CM_ SG_ 1035 MRR_NM_DestAdd "NaN";
+CM_ SG_ 1035 MRR_NM_Alive "NaN";
+CM_ SG_ 1035 MRR_NM_LimpHome "NaN";
+CM_ SG_ 1035 MRR_NM_Ring "NaN";
+CM_ SG_ 1035 MRR_NM_SleepAck "NaN";
+CM_ SG_ 1035 MRR_NM_SleepInd "NaN";
+CM_ SG_ 1042 APA_NM_DestAdd "NaN";
+CM_ SG_ 1042 APA_NM_Alive "NaN";
+CM_ SG_ 1042 APA_NM_LimpHome "NaN";
+CM_ SG_ 1042 APA_NM_Ring "NaN";
+CM_ SG_ 1042 APA_NM_SleepAck "NaN";
+CM_ SG_ 1042 APA_NM_SleepInd "NaN";
+CM_ SG_ 1423 APASW "NaN";
+CM_ SG_ 1423 AVMSW "NaN";
+CM_ SG_ 1423 Parkdirection "NaN";
+CM_ SG_ 1423 APAmenu "NaN";
+CM_ SG_ 1423 Parkingspace "NaN";
+CM_ SG_ 1423 Parkingoutdirection "NaN";
+CM_ SG_ 1423 HU_Failure "NaN";
+CM_ SG_ 1423 HU_APA_Display "NaN";
+CM_ SG_ 1665 MPCSWVersion "NaN";
+CM_ SG_ 1665 MPCHWVersion "NaN";
+CM_ SG_ 1667 MRRSWVersion "NaN";
+CM_ SG_ 1667 MRRHWVersion "NaN";
+CM_ SG_ 1682 UpdMPCFlag "NaN";
+CM_ SG_ 1682 UpgradeModMPC "NaN";
+CM_ SG_ 1682 UpdMPCSucc "NaN";
+CM_ SG_ 1682 UpdMRRFlag "NaN";
+CM_ SG_ 1682 UpgradeModMRR "NaN";
+CM_ SG_ 1682 UpdMRRSucc "NaN";
+CM_ SG_ 1696 ECUUpdSatisfyFlag "NaN";
+CM_ SG_ 1294 HWP_CIPV_Flag "NaN";
+CM_ SG_ 1294 HWP_CIPV_Type "NaN";
+CM_ SG_ 1294 HWP_CIPV_XpositionRaw "NaN";
+CM_ SG_ 1294 HWP_CIPV_YpositionRaw "NaN";
+CM_ SG_ 1294 HWP_CIPV_HeadRaw "NaN";
+CM_ SG_ 1295 HWP_Object1_Flag "NaN";
+CM_ SG_ 1295 HWP_Object1_Type "NaN";
+CM_ SG_ 1295 HWP_Object1_XpositionRaw "NaN";
+CM_ SG_ 1295 HWP_Object1_YpositionRaw "NaN";
+CM_ SG_ 1295 HWP_Object1_Lane_Assignment "NaN";
+CM_ SG_ 1295 HWP_Object1_ID "NaN";
+CM_ SG_ 1295 HWP_Object1_HeadRaw "NaN";
+CM_ SG_ 1322 HWP_Object2_Flag "NaN";
+CM_ SG_ 1322 HWP_Object2_Type "NaN";
+CM_ SG_ 1322 HWP_Object2_XpositionRaw "NaN";
+CM_ SG_ 1322 HWP_Object2_YpositionRaw "NaN";
+CM_ SG_ 1322 HWP_Object2_Lane_Assignment "NaN";
+CM_ SG_ 1322 HWP_Object2_ID "NaN";
+CM_ SG_ 1322 HWP_Object2_HeadRaw "NaN";
+CM_ SG_ 1339 HWP_Lane_Left "NaN";
+CM_ SG_ 1339 HWP_Lane_Left_C0 "NaN";
+CM_ SG_ 1339 HWP_Lane_Left_C1 "NaN";
+CM_ SG_ 1339 HWP_Lane_Left_C2 "NaN";
+CM_ SG_ 1339 HWP_Lane_Left_C3 "NaN";
+CM_ SG_ 1341 HWP_Lane_Right "NaN";
+CM_ SG_ 1341 HWP_Lane_Right_C0 "NaN";
+CM_ SG_ 1341 HWP_Lane_Right_C1 "NaN";
+CM_ SG_ 1341 HWP_Lane_Right_C2 "NaN";
+CM_ SG_ 1341 HWP_Lane_Right_C3 "NaN";
+CM_ SG_ 1020 AccTargetSpdByVoice "NaN";
+BA_DEF_ BO_  "GenMsgCycleTime" FLOAT 0 300000;
+BA_DEF_ BO_  "GenMsgDelayTime" FLOAT 0 300000;
+BA_DEF_ BO_  "GenMsgSendType" ENUM  "cyclic","spontaneous","immediate";
+BA_DEF_ BU_  "NodeLayerModules" STRING ;
+BA_DEF_  "BaudRate" FLOAT 1000 1000000;
+BA_DEF_  "BusType" STRING ;
+BA_DEF_DEF_  "GenMsgCycleTime" 0;
+BA_DEF_DEF_  "GenMsgDelayTime" 0;
+BA_DEF_DEF_  "GenMsgSendType" "cyclic";
+BA_DEF_DEF_  "NodeLayerModules" "";
+BA_DEF_DEF_  "BaudRate" 500000;
+BA_DEF_DEF_  "BusType" "CAN";
+BA_ "GenMsgCycleTime" BO_ 1659 200;
+BA_ "GenMsgCycleTime" BO_ 125 100;
+BA_ "GenMsgCycleTime" BO_ 675 20;
+BA_ "GenMsgCycleTime" BO_ 309 10;
+BA_ "GenMsgCycleTime" BO_ 565 10;
+BA_ "GenMsgCycleTime" BO_ 681 20;
+BA_ "GenMsgCycleTime" BO_ 273 10;
+BA_ "GenMsgCycleTime" BO_ 271 10;
+BA_ "GenMsgCycleTime" BO_ 1640 10;
+BA_ "GenMsgCycleTime" BO_ 530 10;
+BA_ "GenMsgCycleTime" BO_ 614 10;
+BA_ "GenMsgCycleTime" BO_ 339 10;
+BA_ "GenMsgCycleTime" BO_ 673 10;
+BA_ "GenMsgCycleTime" BO_ 674 10;
+BA_ "GenMsgCycleTime" BO_ 430 10;
+BA_ "GenMsgCycleTime" BO_ 517 10;
+BA_ "GenMsgCycleTime" BO_ 518 10;
+BA_ "GenMsgCycleTime" BO_ 543 20;
+BA_ "GenMsgCycleTime" BO_ 1303 100;
+BA_ "GenMsgCycleTime" BO_ 1304 100;
+BA_ "GenMsgCycleTime" BO_ 1408 500;
+BA_ "GenMsgCycleTime" BO_ 1301 50;
+BA_ "GenMsgCycleTime" BO_ 608 20;
+BA_ "GenMsgCycleTime" BO_ 912 20;
+BA_ "GenMsgCycleTime" BO_ 320 20;
+BA_ "GenMsgCycleTime" BO_ 323 20;
+BA_ "GenMsgCycleTime" BO_ 670 20;
+BA_ "GenMsgCycleTime" BO_ 671 20;
+BA_ "GenMsgCycleTime" BO_ 922 50;
+BA_ "GenMsgCycleTime" BO_ 415 20;
+BA_ "GenMsgCycleTime" BO_ 937 10;
+BA_ "GenMsgCycleTime" BO_ 279 10;
+BA_ "GenMsgCycleTime" BO_ 598 10;
+BA_ "GenMsgCycleTime" BO_ 1414 50;
+BA_ "GenMsgCycleTime" BO_ 837 20;
+BA_ "GenMsgCycleTime" BO_ 572 10;
+BA_ "GenMsgCycleTime" BO_ 573 10;
+BA_ "GenMsgCycleTime" BO_ 810 20;
+BA_ "GenMsgCycleTime" BO_ 500 10;
+BA_ "GenMsgCycleTime" BO_ 885 50;
+BA_ "GenMsgCycleTime" BO_ 1423 50;
+BA_ "GenMsgCycleTime" BO_ 1665 1000;
+BA_ "GenMsgCycleTime" BO_ 1667 1000;
+BA_ "GenMsgCycleTime" BO_ 1682 1000;
+BA_ "GenMsgCycleTime" BO_ 1696 1000;
+BA_ "GenMsgCycleTime" BO_ 1294 100;
+BA_ "GenMsgCycleTime" BO_ 1295 100;
+BA_ "GenMsgCycleTime" BO_ 1322 100;
+BA_ "GenMsgCycleTime" BO_ 1339 100;
+BA_ "GenMsgCycleTime" BO_ 1341 100;
+

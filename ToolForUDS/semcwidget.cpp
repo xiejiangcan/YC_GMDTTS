@@ -31,7 +31,8 @@ SEmcWidget::SEmcWidget(SMainWindow *mainWindow, QWidget *parent) :
     SWidget(mainWindow, parent),
     ui(new Ui::SEmcWidget),
     m_timer(new QTimer(this)),
-    m_timeOutFlag(true)
+    m_timeOutFlag(true),
+    m_saveCount(0)
 {
     ui->setupUi(this);
 
@@ -42,6 +43,8 @@ SEmcWidget::SEmcWidget(SMainWindow *mainWindow, QWidget *parent) :
 
 SEmcWidget::~SEmcWidget()
 {
+    if(mFileTool.IsOpen())
+        fileOperation(false);
     delete ui;
     if(m_thread.isRunning()){
         m_thread.stop();
@@ -83,15 +86,15 @@ void SEmcWidget::propertyOfSObjectChanged(SObject *obj, const QString &strPropNa
     Q_UNUSED(obj)
     Q_UNUSED(propChangedBy)
     QObject::blockSignals(true);
-//    if(strPropName == STR_SIGNALOUT){
-//        auto& mapMapping = mapping();
-//        if(mapMapping.contains(STR_SIGNALOUT)
-//                && mapMapping[STR_SIGNALOUT][STR_TYPE].toString() == STR_PROP){
-//            m_thread.setUserFunction(controlThread);
-//            m_thread.setUserParam(this);
-//            m_thread.start();
-//        }
-//    }
+    if(strPropName == STR_SIGNALOUT){
+        auto& mapMapping = mapping();
+        if(mapMapping.contains(STR_SIGNALOUT)
+                && mapMapping[STR_SIGNALOUT][STR_TYPE].toString() == STR_PROP){
+            m_thread.setUserFunction(controlThread);
+            m_thread.setUserParam(this);
+            m_thread.start();
+        }
+    }
     QObject::blockSignals(false);
 }
 
@@ -122,7 +125,7 @@ QString SEmcWidget::LinkFailString()
 QString SEmcWidget::InitFileString()
 {
     QString result = QString("time\t");
-    result += QString("Index\t");
+    //result += QString("Index\t");
     result += QString("VBAT_P_F\t");
     result += QString("IGN\t");
     result += QString("CAN_WAKE_UP\t");
@@ -295,10 +298,16 @@ void SEmcWidget::analysisData(const CAN_OBJ &source)
     auto data = m_tool.GetData();
     if(m_saveFlag){
         if(!mFileTool.IsOpen()){
-            mFileTool.OpenFile(this->sobject()->objectName());
+            mFileTool.OpenFile(QDateTime::currentDateTime().toString(" yyyyMMdd-hhmmss_")
+                               + this->sobject()->objectName());
             mFileTool.WriteData(InitFileString());
         }
         mFileTool.WriteData(DataToString(data));
+        ++m_saveCount;
+        if(m_saveCount > 80000){
+            fileOperation(false);
+            m_saveCount = 0;
+        }
         m_saveFlag = false;
     }
 
@@ -315,7 +324,8 @@ void SEmcWidget::analysisData(const CAN_MESSAGE_PACKAGE &source)
 void SEmcWidget::fileOperation(bool open)
 {
     if(open){
-        mFileTool.OpenFile(this->sobject()->objectName());
+        mFileTool.OpenFile(QDateTime::currentDateTime().toString(" yyyyMMdd-hhmmss_")
+                           + this->sobject()->objectName());
         mFileTool.WriteData(InitFileString());
     }else{
         mFileTool.CloseFile();
@@ -324,8 +334,8 @@ void SEmcWidget::fileOperation(bool open)
             filepath = QApplication::applicationDirPath() + "/data";
         }
         QString devName = this->sobject()->objectName();
-        QString filename = devName
-                + QDateTime::currentDateTime().toString(" yyyyMMdd-hhmmss_")
+        QString filename = QDateTime::currentDateTime().toString(" yyyyMMdd-hhmmss_")
+                + devName
                 + QString(".tsf");
         if(!mFileTool.SaveFile(filepath + "/" + filename))
             qDebug() << "save file failed";

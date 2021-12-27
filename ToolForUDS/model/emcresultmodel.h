@@ -2,6 +2,7 @@
 #define EMCRESULTMODEL_H
 
 #include <QAbstractTableModel>
+#include <QTimer>
 
 class EmcResultModel : public QAbstractTableModel
 {
@@ -22,6 +23,8 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    static QString formateFromSecond(uint second);
+
 protected:
     QVariant hHeaderInfo(int section) const;
     QVariant vHeaderInfo(int section) const;
@@ -29,9 +32,14 @@ protected:
     QVariant getValueFromModel(int row, int column) const;
     QVariant getColorFromModel(int row, int column) const;
 
+protected slots:
+    void slotTimeout();
+
 private:
     QMap<QString, QMap<QString, QVariantMap>>   m_model;
     QStringList                                 m_timeoutList;
+    QVariantMap                                 m_timeMaskMap;
+    QTimer                                      m_timer;
 };
 
 #endif // EMCRESULTMODEL_H

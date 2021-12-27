@@ -13,4 +13,12 @@ SUBDIRS += \
     Core \
     ToolForUDS
 
+HEADERS +=
+
+SOURCES +=
+
+CONFIG += qt
+
+QT += widgets
+
 
