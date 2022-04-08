@@ -31,7 +31,7 @@ static const GUID GUID_DEVINTERFACE_LIST[] =
 SUsbCanWidget::SUsbCanWidget(SMainWindow *mainWindow, QWidget *parent)
     : SWidget(mainWindow, parent),
       m_switchBtn(new QPushButton(QStringLiteral("连接"), this)),
-      m_handle(new YCanHandle(this))
+      m_handle(YCanHandle::getInstance())
 {
     for(int i = 0; i < G_LENGTH; ++i){
         m_groupBox[i] = new QGroupBox(this);
@@ -235,7 +235,8 @@ void SUsbCanWidget::slotBtnClicked()
         m_isOpen = true;
         m_handle->setDeviceType(m_radioBtns[B_TYPE1]->isChecked() ? USBCAN1 : USBCAN2);
         m_handle->setBaudType((BaudType)m_comboBox[C_BAUD]->currentIndex());
-        m_handle->OpenAll();
+        if(!m_handle->OpenAll())
+            return;
         m_switchBtn->setText(QStringLiteral("断开"));
     }
     m_groupBox[G_BAUD]->setEnabled(!m_isOpen);

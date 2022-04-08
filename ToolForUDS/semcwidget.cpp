@@ -70,6 +70,7 @@ void SEmcWidget::setSObject(SObject *obj)
     QString strDevChan = QString("DevChan: %1").arg(m_devChan);
     ui->LB_devInd->setText(strDevInd);
     ui->LB_devChan->setText(strDevChan);
+    m_filterNum = obj->property(EMC_FILTERNUM).toUInt();
 
     if(isMapped(STR_DATASOURCE)){
         QVariantMap ParamInfo = mapping()[STR_DATASOURCE];
@@ -108,6 +109,7 @@ void SEmcWidget::initSObject(SObject *obj)
     obj->setObjectName(EMC_WIDGET);
     obj->setProperty(EMC_DATAFREQ, 1000);
     obj->setProperty(EMC_FILEPATH, STR_DEFAULT);
+    obj->setProperty(EMC_FILTERNUM, 3);
     obj->setProperty(EMC_DEVIND, 0);
     obj->setProperty(EMC_DEVCHAN, 0);
     addSpecialProperty(obj, STR_DATASOURCE, "buff.receive_buff", STR_ROLE_MAPPING);
@@ -270,12 +272,15 @@ void SEmcWidget::analysisData(const CAN_OBJ &source)
                 .value<QPair<double,double>>();
         if(ISAMONG(value, range.first, range.second)){
             m_result[keyName]["state"] = true;
+            m_result[keyName]["errorTime"] = 0;
         }else{
-            if(m_result[keyName]["state"].toBool()){
+            uint filterTime = m_result[keyName]["filterTime"].toInt();
+            filterTime ++;
+            if(filterTime >= m_filterNum && m_result[keyName]["state"].toBool()){
                 uint count = m_result[keyName]["error"].toUInt();
                 m_result[keyName]["error"] = count + 1;
+                m_result[keyName]["state"] = false;
             }
-            m_result[keyName]["state"] = false;
         }
         QLabel* pLabel = m_result[keyName]["label"].value<QLabel*>();
         pLabel->setNum(value);

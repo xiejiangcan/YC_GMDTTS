@@ -1,5 +1,6 @@
 ﻿#include "sudswidget.h"
 #include "tool/usbinterface.h"
+#include "tool/ycanhandle.h"
 
 SUdsWidget::SUdsWidget(SMainWindow *mainWindow, QWidget *parent)
     : SWidget(mainWindow, parent),
@@ -60,6 +61,7 @@ SUdsWidget::SUdsWidget(SMainWindow *mainWindow, QWidget *parent)
             this, &SUdsWidget::slotTimeout);
 
     connect(this, &SUdsWidget::signPackAna, m_server, &UdsServer::slotPackAna);
+    connect(m_server, &UdsServer::signalShowMsg, this, &SUdsWidget::slotShowMsg);
 }
 
 SUdsWidget::~SUdsWidget()
@@ -384,10 +386,10 @@ void SUdsWidget::slotTimeout()
 {
     CAN_OBJ obj;
     obj.ID = 0x782;
-    obj.DataLen = 3;
+    obj.DataLen = 8;
     obj.Data[0] = 0x02;
-    obj.Data[1] = 0x10;
-    obj.Data[2] = 0x01;
+    obj.Data[1] = 0x3e;
+    obj.Data[2] = 0x00;
 
     if(!isMapped(STR_DATAOUT)){
         QMessageBox::warning(this, tr("Warning"),
@@ -409,4 +411,12 @@ void SUdsWidget::slotTimeout()
     }
 
     ObjDataOut->setPropertyS(PropDataOut, QVariant::fromValue(obj));
+}
+
+//Q_DECLARE_METATYPE(CAN_MESSAGE_PACKAGE)
+void SUdsWidget::slotShowMsg(const CAN_MESSAGE_PACKAGE &pack)
+{
+    CAN_MESSAGE_PACKAGE obj = pack;
+    obj.type = QString("RXD");
+    m_msgModel->insertData(obj);
 }

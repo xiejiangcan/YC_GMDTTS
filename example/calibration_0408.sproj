@@ -1,0 +1,199 @@
+ <object name="sobject">
+  <property>
+   <item type="QString" value="" name="author"/>
+   <item type="QString" value="E:/08_work_release/Calibration_1.0/example/calibration_0407.sproj" name="path"/>
+   <item type="QString" value="" name="comment"/>
+   <item type="QString" value="project_root" name="type"/>
+   <item type="QString" value="sobject_0" name="__id"/>
+  </property>
+  <children>
+   <item name="project_root">
+    <property>
+     <item type="QString" value="Calibration" name="name"/>
+     <item type="QString" value="project" name="comment"/>
+     <item type="QString" value="" name="icon"/>
+     <item type="QString" value="" name="init_action"/>
+     <item type="QString" value="" name="release_action"/>
+     <item type="uint" value="1000" name="timer_interval"/>
+     <item type="uint" value="112" name="timer_counter"/>
+     <item type="QString" value="sobject_1" name="__id"/>
+    </property>
+    <children>
+     <item name="communication">
+      <property>
+       <item type="QString" value="sobject_2" name="__id"/>
+      </property>
+      <children/>
+     </item>
+     <item name="data">
+      <property>
+       <item type="QString" value="sobject_3" name="__id"/>
+      </property>
+      <children/>
+     </item>
+     <item name="resource">
+      <property>
+       <item type="QString" value="sobject_4" name="__id"/>
+      </property>
+      <children>
+       <item name="icon">
+        <property>
+         <item type="QString" value="sobject_5" name="__id"/>
+        </property>
+        <children/>
+       </item>
+       <item name="action">
+        <property>
+         <item type="QString" value="sobject_6" name="__id"/>
+        </property>
+        <children/>
+       </item>
+      </children>
+     </item>
+     <item name="ui">
+      <property>
+       <item type="QString" value="max" name="_ui_show"/>
+       <item type="bool" value="false" name="toolbar_visible"/>
+       <item type="bool" value="true" name="statusbar_visible"/>
+       <item type="QString" value="sobject_7" name="__id"/>
+       <item type="bool" value="true" name="show_statusbar"/>
+      </property>
+      <children>
+       <item name="menu">
+        <property>
+         <item type="QString" value="sobject_8" name="__id"/>
+        </property>
+        <children/>
+       </item>
+       <item name="central">
+        <property>
+         <item type="bool" value="true" name="_ui_visible"/>
+         <item type="QString" value="layout_vbox" name="_ui_layout"/>
+         <item type="QString" value="sobject_9" name="__id"/>
+        </property>
+        <children>
+         <item name="main_container">
+          <property>
+           <item type="bool" value="true" name="_ui_visible"/>
+           <item type="QString" value="layout_grid" name="_ui_layout"/>
+           <item type="QString" value="0,0,0" name="_ui_layout_param"/>
+           <item type="int" value="0" name="_ui_min_width"/>
+           <item type="int" value="0" name="_ui_min_height"/>
+           <item type="QString" value="" name="_ui_back_image"/>
+           <item type="QString" value="container" name="__type"/>
+           <item type="QString" value="tab" name="_ui_class"/>
+           <item type="bool" value="true" name="_ui_closable"/>
+           <item type="QString" value="align_north" name="_ui_alignment"/>
+           <item type="QString" value="sobject_13" name="__id"/>
+          </property>
+          <children>
+           <item name="widget">
+            <property>
+             <item type="QString" value="" name="_ui_back_image"/>
+             <item type="bool" value="true" name="_ui_show"/>
+             <item type="QString" value="" name="map_can_id"/>
+             <item type="QString" value="" name="last_can_id"/>
+             <item type="QString" value="" name="last_data"/>
+             <item type="QString" role="mapping" value="buff.receive_buff" name="DataSource"/>
+             <item type="QString" role="mapping" value="buff.send_buff_0" name="DataOut"/>
+             <item type="QString" value="cal_widget" name="__plugin"/>
+             <item type="QString" value="instance" name="__type"/>
+             <item type="bool" value="true" name="_ui_visible"/>
+             <item type="QString" value="layout_grid" name="_ui_layout"/>
+             <item type="QString" value="0" name="_ui_layout_param"/>
+             <item type="int" value="0" name="_ui_min_width"/>
+             <item type="int" value="0" name="_ui_min_height"/>
+             <item type="QString" value="Calibration" name="_ui_title"/>
+             <item type="QString" value="" name="_ui_icon"/>
+             <item type="QString" value="sobject_10" name="__id"/>
+            </property>
+            <children/>
+           </item>
+          </children>
+         </item>
+        </children>
+       </item>
+       <item name="dock">
+        <property>
+         <item type="QString" value="dock" name="__type"/>
+         <item type="QString" value="sobject_14" name="__id"/>
+        </property>
+        <children>
+         <item name="log_widget">
+          <property>
+           <item type="QString" value="" name="_ui_back_image"/>
+           <item type="bool" value="true" name="_ui_show"/>
+           <item type="bool" value="false" name="log_save"/>
+           <item type="QString" value="" name="save_file"/>
+           <item type="QString" value="log_list" name="__plugin"/>
+           <item type="QString" value="instance" name="__type"/>
+           <item type="bool" value="true" name="_ui_visible"/>
+           <item type="QString" value="layout_grid" name="_ui_layout"/>
+           <item type="QString" value="" name="_ui_layout_param"/>
+           <item type="int" value="0" name="_ui_min_width"/>
+           <item type="int" value="0" name="_ui_min_height"/>
+           <item type="QString" value="left" name="_ui_area"/>
+           <item type="int" value="0" name="_ui_index"/>
+           <item type="QString" value="Log" name="_ui_title"/>
+           <item type="bool" value="false" name="_ui_floating"/>
+           <item type="bool" value="true" name="_ui_closable"/>
+           <item type="QString" value="all" name="_ui_allowed_areas"/>
+           <item type="QString" value="sobject_16" name="__id"/>
+          </property>
+          <children/>
+         </item>
+         <item name="can_com">
+          <property>
+           <item type="QString" value="" name="_ui_back_image"/>
+           <item type="bool" value="true" name="_ui_show"/>
+           <item type="QString" value="can" name="__id"/>
+           <item type="int" value="2" name="device_type"/>
+           <item type="int" value="2" name="can_channel"/>
+           <item type="int" value="11" name="can_baud"/>
+           <item type="bool" value="true" name="can_openstate"/>
+           <item type="QString" value="usb_can" name="__plugin"/>
+           <item type="QString" value="instance" name="__type"/>
+           <item type="bool" value="true" name="_ui_visible"/>
+           <item type="QString" value="layout_grid" name="_ui_layout"/>
+           <item type="QString" value="" name="_ui_layout_param"/>
+           <item type="int" value="0" name="_ui_min_width"/>
+           <item type="int" value="0" name="_ui_min_height"/>
+           <item type="QString" value="left" name="_ui_area"/>
+           <item type="int" value="1" name="_ui_index"/>
+           <item type="QString" value="dock" name="_ui_title"/>
+           <item type="bool" value="false" name="_ui_floating"/>
+           <item type="bool" value="true" name="_ui_closable"/>
+           <item type="QString" value="all" name="_ui_allowed_areas"/>
+          </property>
+          <children>
+           <item name="msg_buff">
+            <property>
+             <item type="QString" value="buff" name="__id"/>
+             <item type="int" value="8" name="send_buff_num"/>
+             <item type="CAN_OBJ" value="" name="send_buff_0"/>
+            </property>
+            <children/>
+           </item>
+          </children>
+         </item>
+        </children>
+       </item>
+       <item name="pop_widget">
+        <property>
+         <item type="QString" value="sobject_17" name="__id"/>
+        </property>
+        <children/>
+       </item>
+       <item name="statusbar">
+        <property>
+         <item type="QString" value="statusbar" name="__type"/>
+         <item type="QString" value="sobject_19" name="__id"/>
+        </property>
+        <children/>
+       </item>
+      </children>
+     </item>
+    </children>
+   </item>
+  </children>
+ </object>

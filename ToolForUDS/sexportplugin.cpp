@@ -6,6 +6,7 @@
 #include "sudswidget.h"
 #include "semcwidget.h"
 #include "semctablewidget.h"
+#include "calibrationwidget.h"
 
 QStringList SExportPlugin::keys() const
 {
@@ -14,7 +15,8 @@ QStringList SExportPlugin::keys() const
                          << SUsbCanWidget::keyString()
                          << SUdsWidget::keyString()
                          << SEmcWidget::keyString()
-                         << SEmcTableWidget::keyString();
+                         << SEmcTableWidget::keyString()
+                         << CalibrationWidget::keyString();
 }
 
 QObject *SExportPlugin::create(const QString &strKey, SMainWindow *pMainWindow, QObject *pParent)
@@ -32,6 +34,8 @@ QObject *SExportPlugin::create(const QString &strKey, SMainWindow *pMainWindow, 
         return new SEmcWidget(pMainWindow, pParentW);
     }else if(SEmcTableWidget::keyString() == strKey){
         return new SEmcTableWidget(pMainWindow, pParentW);
+    }else if(CalibrationWidget::keyString() == strKey){
+        return new CalibrationWidget(pMainWindow, pParentW);
     }
 
     return nullptr;
@@ -64,6 +68,10 @@ SObject *SExportPlugin::sobject(const QString &strKey, SObject *pParent)
         pObj = new SObject(pParent);
         SWidget::initializeSObject(pObj);
         SEmcTableWidget::initSObject(pObj);
+    }else if(CalibrationWidget::keyString() == strKey){
+        pObj = new SObject(pParent);
+        SWidget::initializeSObject(pObj);
+        CalibrationWidget::initSObject(pObj);
     }
     if(pObj != NULL){
         pObj->setObjectName(strKey.split('@')[1]);

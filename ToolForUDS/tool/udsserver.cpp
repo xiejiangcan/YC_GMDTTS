@@ -74,10 +74,15 @@ void UdsServer::process(YCanHandle *handle)
 
 void UdsServer::process(SObject *pObj, QString prop)
 {
+    mHandle = YCanHandle::getInstance();
+    connect(mHandle, &YCanHandle::signCanMessage,
+            this, &UdsServer::slotPackAna);
+
     m_dataOutObj = pObj;
     m_propName = prop;
 
     mObjs.clear();
+    mBackPack.clear();
     QStringList content = mContent.split(' ');
     int nSize = content.size();
     if(nSize > 7){
@@ -99,19 +104,20 @@ void UdsServer::process(SObject *pObj, QString prop)
             int lastSize = content.size();
             CAN_OBJ obj;
             obj.ID = mSendCanID;
-            obj.DataLen = lastSize > 7 ? 8 : lastSize + 1;
-            obj.Data[0] = 0x20 + (index++ & 0x0F);
-            for(int i = 1; i < obj.DataLen; ++i){
+            int realSize = lastSize > 7 ? 8 : lastSize + 1;
+            obj.DataLen = 8;
+            obj.Data[0] = 0x21 + (index++ & 0x0F);
+            for(int i = 1; i < realSize; ++i){
                 obj.Data[i] = content.at(i-1).toUInt(nullptr, 16);
             }
-            content.erase(content.begin(), content.begin()+(obj.DataLen-1));
+            content.erase(content.begin(), content.begin()+(realSize-1));
             mObjs.enqueue(obj);
-        }while(content.size() == 0);
+        }while(content.size() != 0);
         sendObj(obj_FF);
         mOutTimer.start(mN_Bs);
     }else{
         CAN_OBJ obj;
-        obj.DataLen = nSize + 1;
+        obj.DataLen = 8;
         obj.ID = mSendCanID;
         int index = 1;
         obj.Data[0] = 0x00 + nSize;
@@ -155,22 +161,25 @@ void UdsServer::sendFC()
 Q_DECLARE_METATYPE(CAN_OBJ)
 void UdsServer::sendObj(const CAN_OBJ &obj)
 {
-    if(mHandle){
-        if(!mHandle->SendData(obj)){
-            mNStatus = N_ERROR;
-            deProcess();
-        }
-    }else{
-        m_dataOutObj->setPropertyS(m_propName, QVariant::fromValue(obj));
-    }
+    //    if(mHandle){
+    //        if(!mHandle->SendData(obj)){
+    //            mNStatus = N_ERROR;
+    //            deProcess();
+    //        }
+    //    }else{
+    //        m_dataOutObj->setPropertyS(m_propName, QVariant::fromValue(obj));
+    //    }
+    mNStatus = N_ERROR;
+    m_dataOutObj->setPropertyS(m_propName, QVariant::fromValue(obj));
 }
 
-void UdsServer::analysisCanObj(const CAN_OBJ &buf)
+void UdsServer::analysisCanObj(const CAN_OBJ &buf, const CAN_MESSAGE_PACKAGE &pkg)
 {
     if(buf.ID != mRecvCanID)
         return;
     const BYTE* pData = buf.Data;
     UINT n_pcitype = (pData[0] & 0xF0) >> 4;
+    emit signalShowMsg(pkg);
     switch (n_pcitype) {
     case 0:{
         // 单帧数据
@@ -181,8 +190,10 @@ void UdsServer::analysisCanObj(const CAN_OBJ &buf)
         }
         mBackPack.clear();
         for(UINT i = 1; i <= pci; ++i){
-            mBackPack.append(QString("%1 ").arg(pData[i], 2, 16));
+            mBackPack.append(QString("%1 ").arg(pData[i], 2, 16, QChar('0')));
         }
+        if(pData[3] == 0x78)
+            break;
         mNStatus = N_OK;
         deProcess();
         break;
@@ -202,7 +213,7 @@ void UdsServer::analysisCanObj(const CAN_OBJ &buf)
             mLastFrames = pci - 6;
             mBackPack.clear();
             for(UINT i = 2; i < 8; ++i){
-                mBackPack.append(QString("%1 ").arg(pData[i], 2, 16));
+                mBackPack.append(QString("%1 ").arg(pData[i], 2, 16, QChar('0')));
             }
             sendFC();
         }
@@ -222,12 +233,12 @@ void UdsServer::analysisCanObj(const CAN_OBJ &buf)
         --mLastBS;
         if(mLastFrames / 7){
             for(UINT i = 1; i < 8; ++i){
-                mBackPack.append(QString("%1 ").arg(pData[i], 2, 16));
+                mBackPack.append(QString("%1 ").arg(pData[i], 2, 16, QChar('0')));
             }
             mLastFrames -= 7;
         }else{
             for(UINT i = 1; i <= mLastFrames % 7; ++i){
-                mBackPack.append(QString("%1 ").arg(pData[i], 2, 16));
+                mBackPack.append(QString("%1 ").arg(pData[i], 2, 16, QChar('0')));
             }
             mLastFrames = 0;
         }
@@ -242,10 +253,11 @@ void UdsServer::analysisCanObj(const CAN_OBJ &buf)
     }
     case 3:{
         BYTE FS = pData[0] & 0x0F;
-        mSendBlockSize = pData[1];
+        mSendBlockSize = pData[1] == 0 ? 0xFF : pData[1];
         mSendSTmin = pData[2];
         switch (FS) {
         case 0:{    // continue to send
+            qDebug() << "begin muti frame";
             mCFTimer.start(mSendSTmin);
             break;
         }
@@ -331,7 +343,7 @@ QString UdsServer::getBackPack() const
 void UdsServer::slotPackAna(const CAN_MESSAGE_PACKAGE &buf)
 {
     CAN_OBJ obj = buf.canObj.value<CAN_OBJ>();
-    analysisCanObj(obj);
+    analysisCanObj(obj, buf);
 }
 
 void UdsServer::slotTimeOut()

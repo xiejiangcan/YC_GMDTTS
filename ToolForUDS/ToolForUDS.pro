@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    calibrationwidget.cpp \
     model/canmessagemodel.cpp \
     model/canmessageproxymodel.cpp \
     model/emcresultmodel.cpp \
@@ -35,10 +36,12 @@ SOURCES += \
     tool/udsservertree.cpp \
     tool/usbinterface.cpp \
     tool/ycanhandle.cpp \
-    tool/yfileoperation.cpp
+    tool/yfileoperation.cpp \
+    tool/generatekeyexlmpl.cpp
 
 HEADERS += \
     ToolForUDS_global.h \
+    calibrationwidget.h \
     model/canmessagemodel.h \
     model/canmessageproxymodel.h \
     model/emcresultmodel.h \
@@ -58,7 +61,8 @@ HEADERS += \
     tool/udsservertree.h \
     tool/usbinterface.h \
     tool/ycanhandle.h \
-    tool/yfileoperation.h
+    tool/yfileoperation.h \
+    tool/generatekeyexlmpl.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../Core/release/ -lSCore
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../Core/debug/ -lSCore
@@ -79,4 +83,5 @@ unix {
 !isEmpty(target.path): INSTALLS += target
 
 FORMS += \
+    calibrationwidget.ui \
     semcwidget.ui
