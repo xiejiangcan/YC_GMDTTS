@@ -3,6 +3,7 @@
 
 #include "ToolForUDS_global.h"
 
+#include "tool/ycanhandle.h"
 #include "tool/udsservertree.h"
 #include "tool/udsserver.h"
 #include "model/udscanidmapmodel.h"
@@ -49,6 +50,7 @@ protected slots:
     void slotServerFinished();
     void slotChangedUdsParams();
     void slotTimeout();
+    void slotShowMsg(const CAN_MESSAGE_PACKAGE &pack);
 
 private:
     QTableView*         m_tables[T_LENGTH];

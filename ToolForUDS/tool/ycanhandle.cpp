@@ -5,6 +5,8 @@
 
 #define TestCan
 
+YCanHandle* YCanHandle::m_instance = nullptr;
+
 YCanHandle::YCanHandle(QObject *parent)
     : AbstractHandle(parent)
 {
@@ -26,6 +28,16 @@ YCanHandle::YCanHandle(QObject *parent)
     mThread.setUserParam(this);
 
     qRegisterMetaType<CAN_MESSAGE_PACKAGE>("CAN_MESSAGE_PACKAGE");
+}
+
+YCanHandle *YCanHandle::getInstance()
+{
+    if(m_instance == nullptr)
+    {
+        m_instance = new YCanHandle;
+    }
+
+    return m_instance;
 }
 
 YCanHandle::~YCanHandle()
@@ -317,6 +329,8 @@ bool YCanHandle::CloseChan(int devInd, int devChan)
 
 bool YCanHandle::SendDataToAll(CAN_OBJ data)
 {
+    if(!IsOpen())
+        return false;
     int failed = 0;
     for(int i = 0; i < nDeviceSize; ++i){
         if(!SendDataToDev(data, i)){
@@ -328,6 +342,8 @@ bool YCanHandle::SendDataToAll(CAN_OBJ data)
 
 bool YCanHandle::SendDataToDev(CAN_OBJ data, int devInd)
 {
+    if(!IsOpen())
+        return false;
     return SendDataToChan(data, devInd, 0)
             && SendDataToChan(data, devInd, 1);
 }
@@ -335,6 +351,8 @@ bool YCanHandle::SendDataToDev(CAN_OBJ data, int devInd)
 bool YCanHandle::SendDataToChan(CAN_OBJ data, int devInd,
                                 int devChan)
 {
+    if(!IsOpen())
+        return false;
     auto dwRes = Transmit(nDeviceType, devInd, devChan,
                           &data, 1);
     if(dwRes == 1)
@@ -349,6 +367,8 @@ bool YCanHandle::IsOpen()
 
 bool YCanHandle::SendData(CAN_OBJ obj)
 {
+    if(!IsOpen())
+        return false;
     auto dwRes = Transmit(nDeviceType, nDeviceInd, nCANInd,
                           &obj, 1);
     if(dwRes == 1)
@@ -358,6 +378,8 @@ bool YCanHandle::SendData(CAN_OBJ obj)
 
 bool YCanHandle::SendData(UINT CanID, const BYTE *data, uint32_t dataLength)
 {
+    if(!IsOpen())
+        return false;
     QVector<CAN_OBJ> dataPool;
     for(uint32_t i = 0; i < dataLength;){
         if(dataLength - i >= 8){

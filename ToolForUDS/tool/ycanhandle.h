@@ -37,7 +37,7 @@ class YCanHandle : public AbstractHandle
     Q_PROPERTY(int DeviceInd READ DeviceInd WRITE setDeviceInd)
     Q_PROPERTY(int CanInd READ CanInd WRITE setCanInd)
 public:
-    explicit YCanHandle(QObject *parent = nullptr);
+    static YCanHandle* getInstance();
     ~YCanHandle();
 
     // set
@@ -77,6 +77,9 @@ public:
 
 
 protected:
+    static YCanHandle* m_instance;
+    explicit YCanHandle(QObject *parent = nullptr);
+
     SThread mThread;
     static int listenCan(void* pParam, const bool& bRunning);
     static int listenAllCan(void* pParam, const bool& bRunning);

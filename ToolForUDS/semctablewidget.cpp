@@ -10,6 +10,7 @@ SEmcTableWidget::SEmcTableWidget(SMainWindow *mainWindow, QWidget *parent)
     m_table->setModel(m_model);
     m_titleLabel->setAlignment(Qt::AlignCenter);
     this->setLayout(new QVBoxLayout(this));
+
     this->layout()->addWidget(m_titleLabel);
     this->layout()->addWidget(m_table);
 

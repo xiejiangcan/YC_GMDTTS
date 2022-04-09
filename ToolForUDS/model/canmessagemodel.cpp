@@ -17,8 +17,8 @@ CanMessageModel::CanMessageModel(QObject *parent)
 
 void CanMessageModel::insertData(CAN_OBJ data, QString type, QString devID)
 {
-    UINT time = QDateTime::currentDateTime().currentDateTime().toString("mmsszzz").toUInt();
-    data.TimeStamp = time;
+    QDateTime time = QDateTime::currentDateTime();   //获取当前时间
+    data.TimeStamp = time.toTime_t();
     ModelData model;
     model.obj = data;
     model.devID = devID;
@@ -93,6 +93,42 @@ QVariant CanMessageModel::data(const QModelIndex &index, int role) const
     }
 }
 
+bool CanMessageModel::saveToFile(QString filepath)
+{
+    QFile file(filepath);
+    if(!file.open(QFile::WriteOnly | QFile::Truncate))
+    {
+        return false;
+    }
+
+    QString datas = QString::fromLocal8Bit("数据流向\t\t时间戳\t\tCAN ID\t\t数据长度\t\tCAN报文\n");
+    int base = 16;
+    for(int i = 0; i < mModel.size(); i++)
+    {
+        QString canData = QString("%1 %2 %3 %4 %5 %6 %7 %8")
+                .arg(mModel[i].obj.Data[0], 2, base, QLatin1Char('0'))
+                .arg(mModel[i].obj.Data[1], 2, base, QLatin1Char('0'))
+                .arg(mModel[i].obj.Data[2], 2, base, QLatin1Char('0'))
+                .arg(mModel[i].obj.Data[3], 2, base, QLatin1Char('0'))
+                .arg(mModel[i].obj.Data[4], 2, base, QLatin1Char('0'))
+                .arg(mModel[i].obj.Data[5], 2, base, QLatin1Char('0'))
+                .arg(mModel[i].obj.Data[6], 2, base, QLatin1Char('0'))
+                .arg(mModel[i].obj.Data[7], 2, base, QLatin1Char('0'));
+
+        QString data = QString("%1\t\t%2\t\t%3\t\t%4\t\t%5\n")
+                .arg(mModel[i].type)
+                .arg(QDateTime::fromSecsSinceEpoch(mModel[i].obj.TimeStamp).toString("yyyy-MM-dd hh:mm:ss"))
+                .arg(mModel[i].obj.ID, 0, base)
+                .arg(mModel[i].obj.DataLen)
+                .arg(canData);
+        datas.append(data);
+    }
+
+    file.write(datas.toLocal8Bit());
+    file.close();
+    return true;
+}
+
 QVariant CanMessageModel::headerInfo(int section) const
 {
     switch (section) {
@@ -122,7 +158,7 @@ QVariant CanMessageModel::format(const ModelData &obj, int column) const
     case 1:
         return obj.type;
     case 2:
-        return obj.obj.TimeStamp;
+        return QDateTime::fromSecsSinceEpoch(obj.obj.TimeStamp).toString("yyyy-MM-dd hh:mm:ss");
     case 3:
         return QString("%1").arg(obj.obj.ID, 0, base);
     case 4:

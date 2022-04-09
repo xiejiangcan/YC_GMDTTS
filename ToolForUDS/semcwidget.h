@@ -63,6 +63,8 @@ private:
     uint                        m_devInd;
     uint                        m_devChan;
     uint                        m_saveCount;
+
+    uint                        m_filterNum;
 };
 
 #endif // SEMCWIDGET_H

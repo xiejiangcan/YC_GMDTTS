@@ -39,6 +39,7 @@
 #define LOG_LIST    "log_list"
 #define USB_CAN     "usb_can"
 #define UDS_WIDGET  "uds_widget"
+#define CAL_WIDGET  "cal_widget"
 
 #define LOG_SAVE        "log_save"
 #define LOG_SAVE_FILE   "save_file"
@@ -68,6 +69,7 @@
 #define EMC_DEVCHAN         "emc_devchan"
 #define EMC_RESULT          "emc_result_"
 #define EMC_RESULTNUM       "emc_resultNum"
+#define EMC_FILTERNUM       "emc_filterNum"
 
 
 #endif // TOOLFORUDS_GLOBAL_H

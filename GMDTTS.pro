@@ -13,9 +13,9 @@ SUBDIRS += \
     Core \
     ToolForUDS
 
-HEADERS +=
+HEADERS += \
 
-SOURCES +=
+SOURCES += \
 
 CONFIG += qt
 

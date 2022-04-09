@@ -35,6 +35,8 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    bool saveToFile(QString filepath);
+
 protected:
     QVariant headerInfo(int section) const;
     QVariant format(const ModelData &obj, int column) const;

@@ -29,8 +29,8 @@ public:
     explicit UdsServer(QObject *parent = nullptr);
 
     void process(YCanHandle *handle);
-    void process(SObject* pObj, QString prop);
-    void analysisCanObj(const CAN_OBJ& obj);
+    void process(SObject *pObj, QString prop);
+    void analysisCanObj(const CAN_OBJ& obj, const CAN_MESSAGE_PACKAGE &pkg);
 
     // settings
     void setCanID(UINT sendID, UINT recvID);
@@ -46,6 +46,9 @@ public:
     QString getContent() const;
     N_STATUS  getStatus() const;
     QString getBackPack() const;
+
+signals:
+    void signalShowMsg(const CAN_MESSAGE_PACKAGE msg);
 
 protected:
     void deProcess();
