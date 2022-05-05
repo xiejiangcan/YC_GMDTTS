@@ -273,6 +273,8 @@ void SEmcWidget::analysisData(const CAN_OBJ &source)
         if(ISAMONG(value, range.first, range.second)){
             m_result[keyName]["state"] = true;
             m_result[keyName]["errorTime"] = 0;
+            QLabel* pLabel = m_result[keyName]["label"].value<QLabel*>();
+            pLabel->setNum(value);
         }else{
             uint filterTime = m_result[keyName]["filterTime"].toInt();
             filterTime ++;
@@ -280,10 +282,10 @@ void SEmcWidget::analysisData(const CAN_OBJ &source)
                 uint count = m_result[keyName]["error"].toUInt();
                 m_result[keyName]["error"] = count + 1;
                 m_result[keyName]["state"] = false;
+                QLabel* pLabel = m_result[keyName]["label"].value<QLabel*>();
+                pLabel->setNum(value);
             }
         }
-        QLabel* pLabel = m_result[keyName]["label"].value<QLabel*>();
-        pLabel->setNum(value);
     }
 
     if(m_tool.IsDataFull() && isMapped(STR_RESULTOUT)){
