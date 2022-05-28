@@ -144,11 +144,36 @@ QString SEmcWidget::InitFileString()
     result += QString("J2_TEMP_ADC\t");
     result += QString("SYS_IO_1P8V\t");
     result += QString("NTC_temp\t");
+
     result += QString("J2_state\t");
-    result += QString("CAN2_state\t");
-    result += QString("CAN3_state\t");
-    result += QString("CPU_USED_RATE\t");
-    result += QString("BPU_USED_RATE\n");
+    result += QString("CAN_STAT_OK\t");
+    result += QString("J2_Sys_NorFlash_Error\t");
+    result += QString("J2_Sys_BPU_Core0Error\t");
+    result += QString("J2_Sys_BPU_Core1Error\t");
+    result += QString("J2_Sys_Kernel_I2C_Ctrl0\t");
+    result += QString("J2_Sys_Kernel_I2C_Ctrl2\t");
+    result += QString("J2_Sys_Monitor_CpuLoadHigh\t");
+    result += QString("J2_Sys_Monitor_MemStarved\t");
+    result += QString("J2_Sys_Ether_Error\t");
+    result += QString("J2_Sys_Core_TempHigh\t");
+    result += QString("J2_Sys_CPUfreq\t");
+    result += QString("J2_Sys_Camera_ConfigError\t");
+    result += QString("J2_Sys_ISP_Error\t");
+    result += QString("J2_Sys_Mipi_HostError\t");
+    result += QString("J2_Sys_Mipi_DevError\t");
+    result += QString("J2_Sys_SIF_Error\t");
+    result += QString("J2_Sys_IPU_SingleError\t");
+    result += QString("J2_Sys_Sensor_FpsError\t");
+    result += QString("J2_Sys_ImageTestPatternFail\t");
+    result += QString("MCU_Sync_J2_Timeout\t");
+    result += QString("J2_Percpt_FailSafe_BlurImage\t");
+    result += QString("J2_Percpt_FailSafe_FullBlockage\t");
+    result += QString("J2_Percpt_Image_Glare\t");
+    result += QString("J2_Percpt_Image_RxTimeout\t");
+    result += QString("J2_Percpt_Image_Freezed\t");
+    result += QString("J2_Percpt_Image_Out_Of_Sequence\t");
+    result += QString("J2_Percpt_Calibration_Dynamic_Pitch\t");
+    result += QString("J2_Percpt_Fps_Low\n");
 
     return result;
 }
@@ -177,10 +202,34 @@ QString SEmcWidget::DataToString(const S4_VEH_RX_DATA &data)
     result += QString::number(data.emcTmsg3_25A.NTC_temp_ADC) + "\t";
 
     result += QString::number(data.emcTmsg4_25B.J2_STAT_OK) + "\t";
-    result += QString::number(data.emcTmsg5_262.CAN2_STAT_OK) + "\t";
-    result += QString::number(data.emcTmsg6_26C.CAN3_STAT_OK) + "\t";
-    result += QString::number(data.emcTmsg4_25B.CPU_USED_RATE) + "\t";
-    result += QString::number(data.emcTmsg4_25B.BPU_USED_RATE) + "\n";
+    result += QString::number(data.emcTmsg4_25B.CAN_STAT_OK) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_NorFlash_Error) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_BPU_Core0Error) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_BPU_Core1Error) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_Kernel_I2C_Ctrl0) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_Kernel_I2C_Ctrl2) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_Monitor_CpuLoadHigh) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_Monitor_MemStarved) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_Ether_Error) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_Core_TempHigh) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_CPUfreq) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_Camera_ConfigError) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_ISP_Error) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_Mipi_HostError) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_Mipi_DevError) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_SIF_Error) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_IPU_SingleError) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_Sensor_FpsError) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Sys_ImageTestPatternFail) + "\t";
+    result += QString::number(data.emcTmsg4_25B.MCU_Sync_J2_Timeout) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Percpt_FailSafe_BlurImage) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Percpt_FailSafe_FullBlockage) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Percpt_Image_Glare) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Percpt_Image_RxTimeout) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Percpt_Image_Freezed) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Percpt_Image_Out_Of_Sequence) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Percpt_Calibration_Dynamic_Pitch) + "\t";
+    result += QString::number(data.emcTmsg4_25B.J2_Percpt_Fps_Low) + "\n";
 
     return result;
 }

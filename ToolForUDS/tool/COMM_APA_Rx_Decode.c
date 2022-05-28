@@ -91,9 +91,63 @@ static inline boolean_T dbc_decode_emcTmsg4(emcTmsg4 *to, const uint8_T bytes[8]
     uint32_T raw;
 
     raw  = ((uint32_T)((bytes[0]))); ///< 8 bit(s) from B7
-    to->CPU_USED_RATE = ((raw));
+    to->J2_STAT_OK = ((raw));
     raw  = ((uint32_T)((bytes[1]))); ///< 8 bit(s) from B15
-    to->BPU_USED_RATE = ((raw));
+    to->CAN_STAT_OK = ((raw));
+    raw  = ((uint32_T)((bytes[2]) & 0x01)); ///< 1 bit(s) from B16
+    to->J2_Sys_NorFlash_Error = ((raw));
+    raw  = ((uint32_T)((bytes[2] >> 1) & 0x01)); ///< 1 bit(s) from B17
+    to->J2_Sys_BPU_Core0Error = ((raw));
+    raw  = ((uint32_T)((bytes[2] >> 2) & 0x01)); ///< 1 bit(s) from B18
+    to->J2_Sys_BPU_Core1Error = ((raw));
+    raw  = ((uint32_T)((bytes[2] >> 3) & 0x01)); ///< 1 bit(s) from B19
+    to->J2_Sys_Kernel_I2C_Ctrl0 = ((raw));
+    raw  = ((uint32_T)((bytes[2] >> 4) & 0x01)); ///< 1 bit(s) from B20
+    to->J2_Sys_Kernel_I2C_Ctrl2 = ((raw));
+    raw  = ((uint32_T)((bytes[2] >> 5) & 0x01)); ///< 1 bit(s) from B21
+    to->J2_Sys_Monitor_CpuLoadHigh = ((raw));
+    raw  = ((uint32_T)((bytes[2] >> 6) & 0x01)); ///< 1 bit(s) from B22
+    to->J2_Sys_Monitor_MemStarved = ((raw));
+    raw  = ((uint32_T)((bytes[2] >> 7) & 0x01)); ///< 1 bit(s) from B23
+    to->J2_Sys_Ether_Error = ((raw));
+    raw  = ((uint32_T)((bytes[3]) & 0x01)); ///< 1 bit(s) from B24
+    to->J2_Sys_Core_TempHigh = ((raw));
+    raw  = ((uint32_T)((bytes[3] >> 1) & 0x01)); ///< 1 bit(s) from B25
+    to->J2_Sys_CPUfreq = ((raw));
+    raw  = ((uint32_T)((bytes[3] >> 2) & 0x01)); ///< 1 bit(s) from B26
+    to->J2_Sys_Camera_ConfigError = ((raw));
+    raw  = ((uint32_T)((bytes[3] >> 3) & 0x01)); ///< 1 bit(s) from B27
+    to->J2_Sys_ISP_Error = ((raw));
+    raw  = ((uint32_T)((bytes[3] >> 4) & 0x01)); ///< 1 bit(s) from B28
+    to->J2_Sys_Mipi_HostError = ((raw));
+    raw  = ((uint32_T)((bytes[3] >> 5) & 0x01)); ///< 1 bit(s) from B29
+    to->J2_Sys_Mipi_DevError = ((raw));
+    raw  = ((uint32_T)((bytes[3] >> 6) & 0x01)); ///< 1 bit(s) from B30
+    to->J2_Sys_SIF_Error = ((raw));
+    raw  = ((uint32_T)((bytes[3] >> 7) & 0x01)); ///< 1 bit(s) from B31
+    to->J2_Sys_IPU_SingleError = ((raw));
+    raw  = ((uint32_T)((bytes[4]) & 0x01)); ///< 1 bit(s) from B32
+    to->J2_Sys_Sensor_FpsError = ((raw));
+    raw  = ((uint32_T)((bytes[4] >> 1) & 0x01)); ///< 1 bit(s) from B33
+    to->J2_Sys_ImageTestPatternFail = ((raw));
+    raw  = ((uint32_T)((bytes[4] >> 2) & 0x01)); ///< 1 bit(s) from B34
+    to->MCU_Sync_J2_Timeout = ((raw));
+    raw  = ((uint32_T)((bytes[4] >> 3) & 0x01)); ///< 1 bit(s) from B35
+    to->J2_Percpt_FailSafe_BlurImage = ((raw));
+    raw  = ((uint32_T)((bytes[4] >> 4) & 0x01)); ///< 1 bit(s) from B36
+    to->J2_Percpt_FailSafe_FullBlockage = ((raw));
+    raw  = ((uint32_T)((bytes[4] >> 5) & 0x01)); ///< 1 bit(s) from B37
+    to->J2_Percpt_Image_Glare = ((raw));
+    raw  = ((uint32_T)((bytes[4] >> 6) & 0x01)); ///< 1 bit(s) from B38
+    to->J2_Percpt_Image_RxTimeout = ((raw));
+    raw  = ((uint32_T)((bytes[4] >> 7) & 0x01)); ///< 1 bit(s) from B39
+    to->J2_Percpt_Image_Freezed = ((raw));
+    raw  = ((uint32_T)((bytes[5]) & 0x01)); ///< 1 bit(s) from B40
+    to->J2_Percpt_Image_Out_Of_Sequence = ((raw));
+    raw  = ((uint32_T)((bytes[5] >> 1) & 0x01)); ///< 1 bit(s) from B41
+    to->J2_Percpt_Calibration_Dynamic_Pitch = ((raw));
+    raw  = ((uint32_T)((bytes[5] >> 2) & 0x01)); ///< 1 bit(s) from B42
+    to->J2_Percpt_Fps_Low = ((raw));
 
     return success;
 }
